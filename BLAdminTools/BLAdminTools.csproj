@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>DoFAdminTools</AssemblyName>
+        <RootNamespace>DoFAdminTools</RootNamespace>
+        <LangVersion>7.3</LangVersion>
+        <IsPackable>false</IsPackable>
+        <Company>krex</Company>
+    </PropertyGroup>
+
+    <Target Name="CheckServerPathSet" BeforeTargets="GetReferenceAssemblyPaths">
+        <Error Text="Server path not found, please set the BLSERVER environment variable to the path of your Bannerlord Server installation." Condition="'$(BLSERVER)' == ''" />
+    </Target>
+
+    <ItemGroup>
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.MountAndBlade.dll">
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.MountAndBlade.Multiplayer.dll">
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.PlayerServices.dll">
+            <Private>False</Private>
+        </Reference>
+        
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.Core.dll">
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.Library.dll">
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.MountAndBlade.DotNetCore.dll">
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.Network.dll">
+            <Private>False</Private>
+        </Reference>
+        
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\System.Numerics.Vectors.dll">
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContentWithTargetPath Include="SubModule.xml" TargetPath="SubModule.xml" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+</Project>

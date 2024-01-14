@@ -1,4 +1,6 @@
-﻿using TaleWorlds.Library;
+﻿using NetworkMessages.FromServer;
+using TaleWorlds.Library;
+using TaleWorlds.MountAndBlade;
 
 namespace DoFAdminTools
 {
@@ -18,5 +20,19 @@ namespace DoFAdminTools
         
         public static void PrintError(string message) => 
             Debug.Print(ErrorPrefix + message, 0, Debug.DebugColor.DarkRed);
+        
+        public static void SendMessageToAllPeers(string message)
+        {
+            GameNetwork.BeginBroadcastModuleEvent();
+            GameNetwork.WriteMessage(new ServerMessage(Prefix + message));
+            GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.IncludeUnsynchronizedClients);
+        }
+
+        public static void SendMessageToPeer(NetworkCommunicator peer, string message)
+        {
+            GameNetwork.BeginModuleEventAsServer(peer);
+            GameNetwork.WriteMessage(new ServerMessage(Prefix + message));
+            GameNetwork.EndModuleEventAsServer();
+        }
     }
 }

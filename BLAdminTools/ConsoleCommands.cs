@@ -7,8 +7,9 @@ namespace DoFAdminTools
     public class ConsoleCommands
     {
         [UsedImplicitly]
-        [ConsoleCommandMethod("dat_add_admin", "Add the ID of a player to be given admin permissions upon login, without using the admin password")]
-        private static void TestCommand(string adminId)
+        [ConsoleCommandMethod("dat_add_admin",
+            "Add the ID of a player to be given admin permissions upon login, without using the admin password")]
+        private static void AddAdminCommand(string adminId)
         {
             Helper.Print("Trying to add admin " + adminId);
 

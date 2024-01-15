@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TaleWorlds.MountAndBlade;
+using DoFAdminTools.Helpers;
 
-namespace DoFAdminTools.repositories
+namespace DoFAdminTools.Repositories
 {
     public class AdminRepository
     {

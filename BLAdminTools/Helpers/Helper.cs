@@ -2,7 +2,7 @@
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace DoFAdminTools
+namespace DoFAdminTools.Helpers
 {
     public static class Helper
     {

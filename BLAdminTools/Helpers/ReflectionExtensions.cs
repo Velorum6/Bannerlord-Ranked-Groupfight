@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace DoFAdminTools
+namespace DoFAdminTools.Helpers
 {
     public static class ReflectionExtensions
     {

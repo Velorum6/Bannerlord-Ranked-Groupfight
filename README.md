@@ -37,7 +37,11 @@ Below is a list of features currently planned to be added to the module. If you 
 - [ ] Timed messages - Add options to add one or more messages to be sent to players by the server on a configurable interval. 
 - [ ] Scene Scripts - Not a whole lot is possible here, but teleport doors will come.
 - [ ] Further Chat Commands
-  - [ ] `!heal`
-  - [ ] Multiple teleport variations (to player, player to me, ...)
   - [ ] `!help`
+  - [ ] `!heal`
+  - [ ] `!extendwarmup`
   - [ ] ...
+  - [ ] Multiple teleport variations (to player, player to me, ...)
+- [ ] Logging
+- [ ] Automated `X joined/left the server` messages
+- [ ] ...

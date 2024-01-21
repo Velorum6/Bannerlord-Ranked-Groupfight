@@ -46,7 +46,7 @@ namespace DoFAdminTools.ChatCommands
                 : command.Substring(prefixLength, firstWhiteSpaceIndex - 1);
 
             if (!_registeredCommands.TryGetValue(commandName, out ChatCommand chatCommand)
-                || chatCommand.CanExecute(executor))
+                || !chatCommand.CanExecute(executor))
             {
                 Helper.SendMessageToPeer(executor,
                     "That command does not exist or you are not allowed to use it right now.");

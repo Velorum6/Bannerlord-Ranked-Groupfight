@@ -44,4 +44,33 @@ Below is a list of features currently planned to be added to the module. If you 
   - [ ] Multiple teleport variations (to player, player to me, ...)
 - [ ] Logging
 - [ ] Automated `X joined/left the server` messages
+- [ ] A fix for TaleWorlds ban system, keeping permanent bans across server restarts
 - [ ] ...
+
+
+## For Developers
+The following information is mainly intended for those interested in building the tools from source themselves, contributing to their further development or building upon them.
+
+### Building from source
+1. Download or Clone this repository
+2. Set the `BLSERVER` environment variable to the path of your local server files installation, e.g. `D:\SteamLibrary\steamapps\common\Mount & Blade II Dedicated Server`.
+   - You may need to restart your PC for msbuild to pick up on the newly set environment variable.
+3. Open in your favorite IDE (personally using Rider, Visual Studio should work as well)
+4. Build.
+
+Please note that currently, the build does not assemble a full, ready-to-use-module. Copying together the `SubModule.xml` as well as the `DoFAdminTools.dll` file into the correct folders is currently still a manual process. This will be fixed soonTM.
+
+### Basic guide
+TODO: Add a basic guide for adding new chat/console commands and anything else relevant.
+
+### License
+All code in this repository is licensed under the MIT License. See the [LICENSE](https://gitlab.com/Krex/dofadmintools/-/blob/master/LICENSE) file for the full license text.
+
+### Contributing
+As per the license, you are free to build on the code provided here pretty much as you see fit. That said, if you do add something cool, please consider opening a Merge Request for it [here](https://gitlab.com/Krex/dofadmintools/-/merge_requests)!
+
+If you do open a merge request, please keep in mind:
+- Please give your merge request a proper title and a (short) description
+- No use of Harmony unless 100% necessary - preferably never. 
+  - Reflection is fine, though please try and keep it to a minimum
+- If possible, make things configurable via console commands :)

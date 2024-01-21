@@ -13,6 +13,8 @@ namespace DoFAdminTools.ChatCommands
         private readonly Dictionary<string, ChatCommand> _registeredCommands =
             new Dictionary<string, ChatCommand>();
 
+        private DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
+
         public List<ChatCommand> Commands => _registeredCommands.Values.ToList();
 
         public bool RegisterCommand(ChatCommand command)
@@ -31,14 +33,17 @@ namespace DoFAdminTools.ChatCommands
             if (executor == null || string.IsNullOrWhiteSpace(command))
                 return false;
 
-            if (command.Length == 1) // TODO when prefix is configurable, check for configured prefix length
+            int prefixLength = _configOptions.CommandPrefix.Length;
+            
+            // ignore if it's just the prefix
+            if (command.Length == prefixLength)
                 return false;
 
             // cut off arguments to find command name only
             int firstWhiteSpaceIndex = command.IndexOf(' ');
             string commandName = firstWhiteSpaceIndex == -1
-                ? command.Substring(1)
-                : command.Substring(1, firstWhiteSpaceIndex - 1);
+                ? command.Substring(prefixLength)
+                : command.Substring(prefixLength, firstWhiteSpaceIndex - 1);
 
             if (!_registeredCommands.TryGetValue(commandName, out ChatCommand chatCommand)
                 || chatCommand.CanExecute(executor))
@@ -48,7 +53,7 @@ namespace DoFAdminTools.ChatCommands
                 return false;
             }
 
-            string args = command.Substring(1 + commandName.Length).Trim();
+            string args = command.Substring(prefixLength + commandName.Length).Trim();
             return chatCommand.Execute(executor, args);
         }
     }

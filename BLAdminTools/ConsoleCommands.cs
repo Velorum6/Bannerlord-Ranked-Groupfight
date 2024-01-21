@@ -7,8 +7,10 @@ using TaleWorlds.MountAndBlade;
 
 namespace DoFAdminTools
 {
-    public class ConsoleCommands
+    public static class ConsoleCommands
     {
+        private static DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
+        
         [UsedImplicitly]
         [ConsoleCommandMethod("dat_add_admin",
             "Add the ID of a player to be given admin permissions upon login, without using the admin password")]
@@ -64,6 +66,29 @@ namespace DoFAdminTools
             }
             
             Helper.Print("\tDone reading config file " + fullTargetPath);
+        }
+
+        [UsedImplicitly]
+        [ConsoleCommandMethod("dat_set_command_prefix",
+            "Set the prefix for ingame chat commands. Note that '/' will not work.")]
+        private static void SetCommandPrefixCommand(string prefix)
+        {
+            if (string.IsNullOrWhiteSpace(prefix))
+            {
+                Helper.PrintError("No prefix provided for dat_set_command_prefix");
+                return;
+            }
+            
+            prefix = prefix.Trim();
+
+            if (prefix.StartsWith("/"))
+            {
+                Helper.PrintError("dat_set_command_prefix: Can't set prefix starting with '/'.");
+                return;
+            }
+
+            _configOptions.CommandPrefix = prefix;
+            Helper.Print($"Set command prefix to {prefix}");
         }
     }
 }

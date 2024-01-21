@@ -1,8 +1,11 @@
-﻿using DoFAdminTools.Helpers;
+﻿using DoFAdminTools.ChatCommands;
+using DoFAdminTools.Helpers;
 using DoFAdminTools.Repositories;
 using NetworkMessages.FromServer;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using PlayerMessageAll = NetworkMessages.FromClient.PlayerMessageAll;
+using PlayerMessageTeam = NetworkMessages.FromClient.PlayerMessageTeam;
 
 namespace DoFAdminTools
 {
@@ -23,6 +26,50 @@ namespace DoFAdminTools
                 
                 Helper.Print($"{peer.UserName} joined as admin (ID = {peerId})");
             }
+        }
+        
+        protected override void OnGameNetworkBegin()
+        {
+            base.OnGameNetworkBegin();
+            Helper.Print("Registering Chat handlers...");
+            AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Add);
+        }
+
+        protected override void OnGameNetworkEnd()
+        {
+            base.OnGameNetworkEnd();
+            Helper.Print("Unregistering Chat handlers...");
+            AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Remove);
+        }
+        
+        private void AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode mode)
+        {
+            if (!GameNetwork.IsServer) 
+                return;
+            
+            GameNetwork.NetworkMessageHandlerRegisterer handlerRegisterer = new GameNetwork.NetworkMessageHandlerRegisterer(mode);
+            handlerRegisterer.Register<PlayerMessageAll>(HandleClientEventPlayerMessageAll);
+            handlerRegisterer.Register<PlayerMessageTeam>(HandleClientEventPlayerMessageTeam);
+        }
+
+        private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
+        {
+            return HandleChatMessage(peer, message.Message);
+        }
+        
+        private bool HandleClientEventPlayerMessageTeam(NetworkCommunicator peer, PlayerMessageTeam message)
+        {
+            return HandleChatMessage(peer, message.Message);
+        }
+
+        private bool HandleChatMessage(NetworkCommunicator sender, string message)
+        {
+            if (!message.StartsWith("!")) // TODO use configurable prefix
+                return true; // don't hide, show in chat
+
+            ChatCommandHandler.Instance.ExecuteCommand(sender, message);
+            
+            return false; // "hide" message from other MessageHandlers, making it not show up in chat for players
         }
 
         private void SyncAdminOptionsToPeer(NetworkCommunicator networkPeer)

@@ -90,5 +90,21 @@ namespace DoFAdminTools
             _configOptions.CommandPrefix = prefix;
             Helper.Print($"Set command prefix to {prefix}");
         }
+
+        [UsedImplicitly]
+        [ConsoleCommandMethod("dat_set_show_joinleave_messages",
+            "[True/False] Set whether to show messages in chat when someone joins or leaves the server.")]
+        private static void SetShowJoinLeaveMessagesCommand(string show)
+        {
+            if (!bool.TryParse(show, out bool showMessages))
+            {
+                Helper.PrintError($"dat_set_show_joinleave_messages: Could not parse boolean (True/False) from '{show}'");
+                return;
+            }
+
+            _configOptions.ShowJoinLeaveMessages = showMessages;
+            
+            Helper.Print($"Set ShowJoinLeaveMessages to {showMessages}");
+        }
     }
 }

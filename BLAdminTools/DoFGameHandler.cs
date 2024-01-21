@@ -11,6 +11,8 @@ namespace DoFAdminTools
 {
     public class DoFGameHandler: GameHandler
     {
+        private DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
+        
         public override void OnBeforeSave() { }
 
         public override void OnAfterSave() { }
@@ -64,7 +66,7 @@ namespace DoFAdminTools
 
         private bool HandleChatMessage(NetworkCommunicator sender, string message)
         {
-            if (!message.StartsWith("!")) // TODO use configurable prefix
+            if (!message.StartsWith(_configOptions.CommandPrefix))
                 return true; // don't hide, show in chat
 
             ChatCommandHandler.Instance.ExecuteCommand(sender, message);

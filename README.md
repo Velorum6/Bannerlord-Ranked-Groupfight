@@ -16,9 +16,10 @@ Below is a list of all features currently implemented in DAT.
 
 - Chat Commands
   - `!me`
-    - TODO
+    - Shows the using player their PlayerId.
   - `!playerinfo PLAYERNAME`
-    - TODO
+    - Shows the PlayerId of any player whose name contains the given `PLAYERNAME`. Only available to admins.
+    - Note that `PLAYERNAME` does not require an exact match. For example, by typing `!playerinfo [DoF]` you can show the PlayerId of any player with the DoF clan tag.
 - New Configuration Options / Console Commands
   - `dat_add_admin ADMINID` - Add a player id to the list of admins. When a player joins the server and their id is on the list, they can use the ingame admin panel and admin chat commands.
     - The player id can be obtained by running `!me` (by the player themselves) or `!playerinfo PLAYERNAME` (by an admin) ingame.
@@ -29,6 +30,8 @@ Below is a list of all features currently implemented in DAT.
   - `dat_set_command_prefix PREFIX` - Set the prefix for chat commands to the given character or character sequence. 
     - Default is `!`.
     - Note that `/` is reserved for chat channels by TaleWorlds; it can not be used here.
+  - `dat_set_show_joinleave_messages TRUE|FALSE`
+    - Set whether to show a message in chat when a player joins or leaves the server. Options are `TRUE` or `FALSE`.
 
 ## Planned Features
 
@@ -43,8 +46,8 @@ Below is a list of features currently planned to be added to the module. If you 
   - [ ] ...
   - [ ] Multiple teleport variations (to player, player to me, ...)
 - [ ] Logging
-- [ ] Automated `X joined/left the server` messages
 - [ ] A fix for TaleWorlds ban system, keeping permanent bans across server restarts
+- [ ] Configuration for messages shown in chat, to allow for customization & internationalization
 - [ ] ...
 
 

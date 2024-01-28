@@ -37,6 +37,10 @@
         <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.MountAndBlade.DotNetCore.dll">
             <Private>False</Private>
         </Reference>
+        
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.DotNet.dll">
+            <Private>False</Private>
+        </Reference>
 
         <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.Network.dll">
             <Private>False</Private>

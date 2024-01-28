@@ -45,6 +45,7 @@ namespace DoFAdminTools
 
             commandHandler.RegisterCommand(new MeCommand());
             commandHandler.RegisterCommand(new PlayerInfoCommand());
+            commandHandler.RegisterCommand(new HealCommand());
         }
     }
 }

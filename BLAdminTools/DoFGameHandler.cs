@@ -1,6 +1,9 @@
-﻿using DoFAdminTools.ChatCommands;
+﻿using System;
+using System.IO;
+using DoFAdminTools.ChatCommands;
 using DoFAdminTools.Helpers;
 using DoFAdminTools.Repositories;
+using NetworkMessages.FromClient;
 using NetworkMessages.FromServer;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -72,6 +75,7 @@ namespace DoFAdminTools
                 new GameNetwork.NetworkMessageHandlerRegisterer(mode);
             handlerRegisterer.Register<PlayerMessageAll>(HandleClientEventPlayerMessageAll);
             handlerRegisterer.Register<PlayerMessageTeam>(HandleClientEventPlayerMessageTeam);
+            handlerRegisterer.Register<KickPlayer>(HandleClientEventKickPlayer);
         }
 
         private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
@@ -82,6 +86,20 @@ namespace DoFAdminTools
         private bool HandleClientEventPlayerMessageTeam(NetworkCommunicator peer, PlayerMessageTeam message)
         {
             return HandleChatMessage(peer, message.Message);
+        }
+        
+        private bool HandleClientEventKickPlayer(NetworkCommunicator peer, KickPlayer message)
+        {
+            if (!message.BanPlayer || !peer.IsAdmin)
+                return false;
+            
+            string banListPath = Path.Combine(DoFSubModule.NativeModulePath, _configOptions.BanListFileName);
+            string playerId = message.PlayerPeer.VirtualPlayer.Id.ToString();
+            
+            File.AppendAllText(banListPath, $"{Environment.NewLine}{playerId} # Player {message.PlayerPeer.UserName}, banned by {peer.UserName} at {DateTime.Now}");
+            Helper.Print($"{peer.UserName} banned {message.PlayerPeer.UserName}!");
+            
+            return false; // let TWs code handle the actual request
         }
 
         private bool HandleChatMessage(NetworkCommunicator sender, string message)

@@ -4,6 +4,7 @@ using DoFAdminTools.Helpers;
 using DoFAdminTools.Repositories;
 using JetBrains.Annotations;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.PlayerServices;
 
 namespace DoFAdminTools
 {
@@ -28,22 +29,20 @@ namespace DoFAdminTools
             (Action<string>) Delegate.CreateDelegate(typeof(Action<string>),
                 typeof(DedicatedServerConsoleCommandManager).GetStaticMethodInfo("HandleConsoleCommand"));
 
-        private static readonly string NativeModulePath =
-            Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../Modules/Native/"));
-
         [UsedImplicitly]
         [ConsoleCommandMethod("dat_include",
             "Include another config file to be parsed as well. Useful for data shared between multiple configurations.")]
         private static void IncludeConfigFileCommand(string configFileName)
         {
             Helper.Print($"Trying to include file {configFileName}");
+            string nativeModulePath = DoFSubModule.NativeModulePath;
 
-            string fullTargetPath = Path.GetFullPath(Path.Combine(NativeModulePath, configFileName));
+            string fullTargetPath = Path.GetFullPath(Path.Combine(nativeModulePath, configFileName));
 
-            if (!fullTargetPath.StartsWith(NativeModulePath))
+            if (!fullTargetPath.StartsWith(nativeModulePath))
             {
                 Helper.PrintError(
-                    $"\tGiven Path ({configFileName}) leads to location ({fullTargetPath}) outside of your Modules/Native/ directory ({NativeModulePath}), therefore it is not included.");
+                    $"\tGiven Path ({configFileName}) leads to location ({fullTargetPath}) outside of your Modules/Native/ directory ({nativeModulePath}), therefore it is not included.");
                 return;
             }
 
@@ -105,6 +104,61 @@ namespace DoFAdminTools
             _configOptions.ShowJoinLeaveMessages = showMessages;
             
             Helper.Print($"Set ShowJoinLeaveMessages to {showMessages}");
+        }
+
+        [UsedImplicitly]
+        [ConsoleCommandMethod("dat_set_and_load_banlist",
+            "Set the ban list file, then load all bans contained in the file if it exists.")]
+        private static void SetAndLoadBanlistCommand(string banListPath)
+        {
+            Helper.Print($"Trying to load ban list file {banListPath}");
+            string nativeModulePath = DoFSubModule.NativeModulePath;
+
+            string fullTargetPath = Path.GetFullPath(Path.Combine(nativeModulePath, banListPath));
+
+            if (!fullTargetPath.StartsWith(nativeModulePath))
+            {
+                Helper.PrintError(
+                    $"\tGiven Path ({banListPath}) leads to location ({fullTargetPath}) outside of your Modules/Native/ directory ({nativeModulePath}), therefore it can not be loaded.");
+                return;
+            }
+
+            _configOptions.BanListFileName = banListPath;
+            Helper.Print($"\tSet BanListFileName to {banListPath}");
+
+            if (!File.Exists(fullTargetPath))
+            {
+                Helper.PrintWarning($"\tNo ban list file found at path {fullTargetPath}. Path will be used for new bans but no existing bans are loaded right now.");
+                return;
+            }
+            
+            Helper.Print("\tLoading ban list from " + fullTargetPath);
+
+            string[] lines = File.ReadAllLines(fullTargetPath);
+
+            foreach (string line in lines)
+            {
+                var currentLine = line.Trim();
+                
+                if (currentLine.StartsWith("#"))
+                    continue;
+
+                int commentSignIndex = currentLine.IndexOf("#", StringComparison.Ordinal);
+
+                if (commentSignIndex != -1)
+                    currentLine = currentLine.Substring(0, commentSignIndex).TrimEnd();
+                try
+                {
+                    PlayerId playerId = PlayerId.FromString(currentLine);
+                    CustomGameBannedPlayerManager.AddBannedPlayer(playerId, int.MaxValue);
+                }
+                catch (FormatException ex)
+                {
+                    Helper.PrintError($"\tCould not parse {currentLine} as a PlayerId, skipping.");
+                }
+            }
+            
+            Helper.Print("\tDone reading ban list");
         }
     }
 }

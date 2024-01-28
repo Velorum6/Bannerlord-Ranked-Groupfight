@@ -1,4 +1,5 @@
-﻿using DoFAdminTools.ChatCommands;
+﻿using System.IO;
+using DoFAdminTools.ChatCommands;
 using DoFAdminTools.ChatCommands.AdminCommands;
 using DoFAdminTools.ChatCommands.PublicCommands;
 using DoFAdminTools.Helpers;
@@ -10,6 +11,9 @@ namespace DoFAdminTools
 {
     public class DoFSubModule: MBSubModuleBase
     {
+        public static readonly string NativeModulePath =
+            Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../Modules/Native/"));
+        
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();

@@ -32,6 +32,13 @@ Below is a list of all features currently implemented in DAT.
     - Note that `/` is reserved for chat channels by TaleWorlds; it can not be used here.
   - `dat_set_show_joinleave_messages TRUE|FALSE`
     - Set whether to show a message in chat when a player joins or leaves the server. Options are `TRUE` or `FALSE`.
+  - `dat_set_and_load_banlist FILENAME`
+    - Set the path to a ban list file (within your `YOURBLSERVER/Modules/Native/` folder, as with `dat_include`), then load all bans stored within the given file.
+    - By default, banning someone only lasts until the server is restarted. This command allows you to persist bans across server restarts.
+    - **If this command is not run, bans will not be loaded**. However, any new ban will still be written to `YOURBLSERVER/Modules/Native/banlist.txt`, should you want to use them later.
+      - Similarly, if you run multiple servers using the same files, bans from one server will only be transferred to the others when they execute this command, re-reading the banlist file.
+    - Anything in a line after a `#` is ignored. You can use this to store extra information on the PlayerId before it (by default, the name of the player, of the banning admin and the date of the ban are stored) or to (temporarily) exclude bans from being loaded. 
+      - You can permanently remove a ban by deleting the relevant line from the banlist file. Note that a server restart is required for the unban to take effect.
 
 ## Planned Features
 
@@ -46,7 +53,7 @@ Below is a list of features currently planned to be added to the module. If you 
   - [ ] ...
   - [ ] Multiple teleport variations (to player, player to me, ...)
 - [ ] Logging
-- [ ] A fix for TaleWorlds ban system, keeping permanent bans across server restarts
+- [X] A fix for TaleWorlds ban system, keeping permanent bans across server restarts
 - [ ] Configuration for messages shown in chat, to allow for customization & internationalization
 - [ ] ...
 

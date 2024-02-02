@@ -42,7 +42,7 @@ namespace DoFAdminTools.ChatCommands.AdminCommands
                     }
                     else if (weapon.IsShield())
                     {
-                        weapon.HitPoints = weapon.ModifiedMaxHitPoints;
+                        peer.ControlledAgent.ChangeWeaponHitPoints((EquipmentIndex) i, weapon.ModifiedMaxHitPoints);
                     }
                 }
 

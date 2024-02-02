@@ -19,7 +19,7 @@ namespace DoFAdminTools.ChatCommands.AdminCommands
                 {
                     pair.Key?.FadeOut(true, true);
                 }
-                Helper.SendMessageToPeer(executor, "All unmounted horses were removed.");
+                Helper.SendMessageToAllPeers($"{executor.UserName} removed all stray horses.");
                 return true;
             }
 

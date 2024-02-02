@@ -12,14 +12,30 @@ DAT aims to build on what TaleWorlds have given us by adding some new config opt
 
 ## Features
 
-Below is a list of all features currently implemented in DAT.
+Below is a list of all features currently implemented in DAT. 
+
+Note that anything written in ALLCAPS is a parameter. If a parameter is contained in `<ANGLEDBRACKETS>`, it is optional and does not *need* to be provided. A pipe symbol `|` denotes that the parameter may be either what is to the right or what is to the left of it.
 
 - Chat Commands
-  - `!me`
-    - Shows the using player their PlayerId.
-  - `!playerinfo PLAYERNAME`
-    - Shows the PlayerId of any player whose name contains the given `PLAYERNAME`. Only available to admins.
-    - Note that `PLAYERNAME` does not require an exact match. For example, by typing `!playerinfo [DoF]` you can show the PlayerId of any player with the DoF clan tag.
+  - **Admin Commands** - These commands can only be used by admins.
+    - `!playerinfo PLAYERNAME`
+      - Shows the PlayerId of any player whose name contains the given `PLAYERNAME`. Only available to admins.
+      - Note that `PLAYERNAME` does not require an exact match. For example, by typing `!playerinfo [DoF]` you can show the PlayerId of any player with the DoF clan tag.
+    - `!heal <PLAYERNAME>`
+      - Heal any player whose name contains the given `PLAYERNAME`. If no name is given, all players are healed instead.
+      - Healing in this case means restoring the HP of the player and their mount, restoring ammunition (arrows and bolts, not throwing weapons) and restoring the HP of the players shields.
+    - `!move X Z`
+      - Teleport yourself, moving in the direction you're looking at by `X` meters and up by `Z` meters. `X` and `Z` may be positive, negative or zero but must be whole numbers.
+    - `!tptome <PLAYERNAME>`
+      - Teleports any player whose name contains the given `PLAYERNAME` to your current position. If no `PLAYERNAME` is given, all players are teleported.
+    - `!tpmeto PLAYERNAME`
+      - Teleport yourself to the position of a player whose name contains the given `PLAYERNAME`. If multiple players names contain the given `PLAYERNAME`, the first one found is used, so be precise.
+    - `!removehorses`
+      - Remove all horses from the scene that do not currently have a rider.
+      - Provided by Doseq - thank you!
+  - **Public Commands** - These commands can be used by every player.
+    - `!me`
+      - Shows the using player their PlayerId.
 - New Configuration Options / Console Commands
   - `dat_add_admin ADMINID` - Add a player id to the list of admins. When a player joins the server and their id is on the list, they can use the ingame admin panel and admin chat commands.
     - The player id can be obtained by running `!me` (by the player themselves) or `!playerinfo PLAYERNAME` (by an admin) ingame.
@@ -48,10 +64,10 @@ Below is a list of features currently planned to be added to the module. If you 
 - [ ] Scene Scripts - Not a whole lot is possible here, but teleport doors will come.
 - [ ] Further Chat Commands
   - [ ] `!help`
-  - [ ] `!heal`
+  - [X] `!heal`
   - [ ] `!extendwarmup`
   - [ ] ...
-  - [ ] Multiple teleport variations (to player, player to me, ...)
+  - [X] Multiple teleport variations (to player, player to me, ...)
 - [ ] Logging
 - [X] A fix for TaleWorlds ban system, keeping permanent bans across server restarts
 - [ ] Configuration for messages shown in chat, to allow for customization & internationalization

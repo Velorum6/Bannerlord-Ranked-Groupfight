@@ -11,7 +11,7 @@ namespace DoFAdminTools.ChatCommands
         public static ChatCommandHandler Instance { get; } = new ChatCommandHandler();
 
         private readonly Dictionary<string, ChatCommand> _registeredCommands =
-            new Dictionary<string, ChatCommand>();
+            new Dictionary<string, ChatCommand>(StringComparer.OrdinalIgnoreCase);
 
         private DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
 

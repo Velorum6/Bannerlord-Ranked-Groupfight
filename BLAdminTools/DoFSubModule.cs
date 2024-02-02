@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using DoFAdminTools.ChatCommands;
 using DoFAdminTools.ChatCommands.AdminCommands;
+using DoFAdminTools.ChatCommands.AdminCommands.Teleport;
 using DoFAdminTools.ChatCommands.PublicCommands;
 using DoFAdminTools.Helpers;
 using TaleWorlds.Core;
@@ -47,6 +48,12 @@ namespace DoFAdminTools
             commandHandler.RegisterCommand(new PlayerInfoCommand());
             commandHandler.RegisterCommand(new HealCommand());
             commandHandler.RegisterCommand(new RemoveHorsesCommand());
+            
+            // Teleport Commands
+            commandHandler.RegisterCommand(new MoveCommand());
+            commandHandler.RegisterCommand(new TeleportMeToCommand());
+            commandHandler.RegisterCommand(new TeleportToMeCommand());
+            
         }
     }
 }

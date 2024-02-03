@@ -1,13 +1,12 @@
-﻿namespace DoFAdminTools
+﻿namespace DoFAdminTools;
+
+public class DoFConfigOptions
 {
-    public class DoFConfigOptions
-    {
-        public static DoFConfigOptions Instance { get; } = new DoFConfigOptions();
+    public static DoFConfigOptions Instance { get; } = new();
 
-        public string CommandPrefix { get; set; } = "!";
+    public string CommandPrefix { get; set; } = "!";
         
-        public string BanListFileName { get; set; } = "banlist.txt";
+    public string BanListFileName { get; set; } = "banlist.txt";
 
-        public bool ShowJoinLeaveMessages { get; set; } = true;
-    }
+    public bool ShowJoinLeaveMessages { get; set; } = true;
 }

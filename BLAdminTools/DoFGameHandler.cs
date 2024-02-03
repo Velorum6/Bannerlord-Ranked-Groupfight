@@ -10,126 +10,125 @@ using TaleWorlds.MountAndBlade;
 using PlayerMessageAll = NetworkMessages.FromClient.PlayerMessageAll;
 using PlayerMessageTeam = NetworkMessages.FromClient.PlayerMessageTeam;
 
-namespace DoFAdminTools
+namespace DoFAdminTools;
+
+public class DoFGameHandler : GameHandler
 {
-    public class DoFGameHandler : GameHandler
+    private DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
+
+    public override void OnBeforeSave()
     {
-        private DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
+    }
 
-        public override void OnBeforeSave()
+    public override void OnAfterSave()
+    {
+    }
+
+    protected override void OnPlayerConnect(VirtualPlayer peer)
+    {
+        string peerId = peer.Id.ToString();
+
+        if (AdminRepository.Instance.IsAdmin(peerId) && peer.Communicator is NetworkCommunicator networkPeer)
         {
-        }
+            networkPeer.UpdateForJoiningCustomGame(true); // set as admin
+            SyncAdminOptionsToPeer(networkPeer);
 
-        public override void OnAfterSave()
-        {
-        }
-
-        protected override void OnPlayerConnect(VirtualPlayer peer)
-        {
-            string peerId = peer.Id.ToString();
-
-            if (AdminRepository.Instance.IsAdmin(peerId) && peer.Communicator is NetworkCommunicator networkPeer)
-            {
-                networkPeer.UpdateForJoiningCustomGame(true); // set as admin
-                SyncAdminOptionsToPeer(networkPeer);
-
-                Helper.Print($"{peer.UserName} joined as admin (ID = {peerId})");
-                if (_configOptions.ShowJoinLeaveMessages)
-                    Helper.SendMessageToAllPeers($"{peer.UserName} joined as admin.");
-            }
-            else if (_configOptions.ShowJoinLeaveMessages)
-            {
-                Helper.SendMessageToAllPeers($"{peer.UserName} joined the server.");
-            }
-        }
-
-        protected override void OnPlayerDisconnect(VirtualPlayer peer)
-        {
-            base.OnPlayerDisconnect(peer);
+            Helper.Print($"{peer.UserName} joined as admin (ID = {peerId})");
             if (_configOptions.ShowJoinLeaveMessages)
-            {
-                Helper.SendMessageToAllPeers($"{peer.UserName} left the server.");
-            }
+                Helper.SendMessageToAllPeers($"{peer.UserName} joined as admin.");
         }
-
-        protected override void OnGameNetworkBegin()
+        else if (_configOptions.ShowJoinLeaveMessages)
         {
-            base.OnGameNetworkBegin();
-            Helper.Print("Registering Chat handlers...");
-            AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Add);
+            Helper.SendMessageToAllPeers($"{peer.UserName} joined the server.");
         }
+    }
 
-        protected override void OnGameNetworkEnd()
+    protected override void OnPlayerDisconnect(VirtualPlayer peer)
+    {
+        base.OnPlayerDisconnect(peer);
+        if (_configOptions.ShowJoinLeaveMessages)
         {
-            base.OnGameNetworkEnd();
-            Helper.Print("Unregistering Chat handlers...");
-            AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Remove);
+            Helper.SendMessageToAllPeers($"{peer.UserName} left the server.");
         }
+    }
 
-        private void AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode mode)
-        {
-            if (!GameNetwork.IsServer)
-                return;
+    protected override void OnGameNetworkBegin()
+    {
+        base.OnGameNetworkBegin();
+        Helper.Print("Registering Chat handlers...");
+        AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Add);
+    }
 
-            GameNetwork.NetworkMessageHandlerRegisterer handlerRegisterer =
-                new GameNetwork.NetworkMessageHandlerRegisterer(mode);
-            handlerRegisterer.Register<PlayerMessageAll>(HandleClientEventPlayerMessageAll);
-            handlerRegisterer.Register<PlayerMessageTeam>(HandleClientEventPlayerMessageTeam);
-            handlerRegisterer.Register<KickPlayer>(HandleClientEventKickPlayer);
-        }
+    protected override void OnGameNetworkEnd()
+    {
+        base.OnGameNetworkEnd();
+        Helper.Print("Unregistering Chat handlers...");
+        AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Remove);
+    }
 
-        private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
-        {
-            return HandleChatMessage(peer, message.Message);
-        }
+    private void AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode mode)
+    {
+        if (!GameNetwork.IsServer)
+            return;
 
-        private bool HandleClientEventPlayerMessageTeam(NetworkCommunicator peer, PlayerMessageTeam message)
-        {
-            return HandleChatMessage(peer, message.Message);
-        }
+        GameNetwork.NetworkMessageHandlerRegisterer handlerRegisterer =
+            new GameNetwork.NetworkMessageHandlerRegisterer(mode);
+        handlerRegisterer.Register<PlayerMessageAll>(HandleClientEventPlayerMessageAll);
+        handlerRegisterer.Register<PlayerMessageTeam>(HandleClientEventPlayerMessageTeam);
+        handlerRegisterer.Register<KickPlayer>(HandleClientEventKickPlayer);
+    }
+
+    private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
+    {
+        return HandleChatMessage(peer, message.Message);
+    }
+
+    private bool HandleClientEventPlayerMessageTeam(NetworkCommunicator peer, PlayerMessageTeam message)
+    {
+        return HandleChatMessage(peer, message.Message);
+    }
         
-        private bool HandleClientEventKickPlayer(NetworkCommunicator peer, KickPlayer message)
-        {
-            if (!message.BanPlayer || !peer.IsAdmin)
-                return false;
+    private bool HandleClientEventKickPlayer(NetworkCommunicator peer, KickPlayer message)
+    {
+        if (!message.BanPlayer || !peer.IsAdmin)
+            return false;
             
-            string banListPath = Path.Combine(DoFSubModule.NativeModulePath, _configOptions.BanListFileName);
-            string playerId = message.PlayerPeer.VirtualPlayer.Id.ToString();
+        string banListPath = Path.Combine(DoFSubModule.NativeModulePath, _configOptions.BanListFileName);
+        string playerId = message.PlayerPeer.VirtualPlayer.Id.ToString();
             
-            File.AppendAllText(banListPath, $"{Environment.NewLine}{playerId} # Player {message.PlayerPeer.UserName}, banned by {peer.UserName} at {DateTime.Now}");
-            Helper.Print($"{peer.UserName} banned {message.PlayerPeer.UserName}!");
+        File.AppendAllText(banListPath, $"{Environment.NewLine}{playerId} # Player {message.PlayerPeer.UserName}, banned by {peer.UserName} at {DateTime.Now}");
+        Helper.Print($"{peer.UserName} banned {message.PlayerPeer.UserName}!");
             
-            return false; // let TWs code handle the actual request
-        }
+        return false; // let TWs code handle the actual request
+    }
 
-        private bool HandleChatMessage(NetworkCommunicator sender, string message)
-        {
-            if (!message.StartsWith(_configOptions.CommandPrefix))
-                return true; // don't hide, show in chat
+    private bool HandleChatMessage(NetworkCommunicator sender, string message)
+    {
+        if (!message.StartsWith(_configOptions.CommandPrefix))
+            return true; // don't hide, show in chat
 
-            ChatCommandHandler.Instance.ExecuteCommand(sender, message);
+        ChatCommandHandler.Instance.ExecuteCommand(sender, message);
 
-            return false; // "hide" message from other MessageHandlers, making it not show up in chat for players
-        }
+        return false; // "hide" message from other MessageHandlers, making it not show up in chat for players
+    }
 
-        private void SyncAdminOptionsToPeer(NetworkCommunicator networkPeer)
+    private void SyncAdminOptionsToPeer(NetworkCommunicator networkPeer)
+    {
+        GameNetwork.BeginModuleEventAsServer(networkPeer);
+        GameNetwork.WriteMessage(new MultiplayerOptionsDefault());
+        GameNetwork.EndModuleEventAsServer();
+        foreach (CustomGameUsableMap usableMap in MultiplayerIntermissionVotingManager.Instance.UsableMaps)
         {
             GameNetwork.BeginModuleEventAsServer(networkPeer);
-            GameNetwork.WriteMessage(new MultiplayerOptionsDefault());
-            GameNetwork.EndModuleEventAsServer();
-            foreach (CustomGameUsableMap usableMap in MultiplayerIntermissionVotingManager.Instance.UsableMaps)
-            {
-                GameNetwork.BeginModuleEventAsServer(networkPeer);
-                GameNetwork.WriteMessage(new MultiplayerIntermissionUsableMapAdded(usableMap.map,
-                    usableMap.isCompatibleWithAllGameTypes,
-                    usableMap.isCompatibleWithAllGameTypes ? 0 : usableMap.compatibleGameTypes.Count,
-                    usableMap.compatibleGameTypes));
-                GameNetwork.EndModuleEventAsServer();
-            }
-
-            GameNetwork.BeginModuleEventAsServer(networkPeer);
-            GameNetwork.WriteMessage(new UpdateIntermissionVotingManagerValues());
+            GameNetwork.WriteMessage(new MultiplayerIntermissionUsableMapAdded(usableMap.map,
+                usableMap.isCompatibleWithAllGameTypes,
+                usableMap.isCompatibleWithAllGameTypes ? 0 : usableMap.compatibleGameTypes.Count,
+                usableMap.compatibleGameTypes));
             GameNetwork.EndModuleEventAsServer();
         }
+
+        GameNetwork.BeginModuleEventAsServer(networkPeer);
+        GameNetwork.WriteMessage(new UpdateIntermissionVotingManagerValues());
+        GameNetwork.EndModuleEventAsServer();
     }
 }

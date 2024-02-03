@@ -8,52 +8,51 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 
-namespace DoFAdminTools
+namespace DoFAdminTools;
+
+public class DoFSubModule: MBSubModuleBase
 {
-    public class DoFSubModule: MBSubModuleBase
+    public static readonly string NativeModulePath =
+        Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../Modules/Native/"));
+        
+    protected override void OnSubModuleLoad()
     {
-        public static readonly string NativeModulePath =
-            Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../Modules/Native/"));
+        base.OnSubModuleLoad();
+            
+        Helper.Print("Loading...");
+            
+        Helper.Print("Adding Console Commands...");
+        AddConsoleCommands();
+            
+        Helper.Print("Registering Chat Commands...");
+        RegisterChatCommands();
+            
+        Helper.Print("Loaded.");
+    }
+
+    public override void OnMultiplayerGameStart(Game game, object starterObject)
+    {
+        base.OnMultiplayerGameStart(game, starterObject);
+            
+        Helper.Print("Adding GameHandler.");
+        game.AddGameHandler<DoFGameHandler>();
+    }
+
+    private void AddConsoleCommands() => DedicatedServerConsoleCommandManager.AddType(typeof(ConsoleCommands));
         
-        protected override void OnSubModuleLoad()
-        {
-            base.OnSubModuleLoad();
-            
-            Helper.Print("Loading...");
-            
-            Helper.Print("Adding Console Commands...");
-            AddConsoleCommands();
-            
-            Helper.Print("Registering Chat Commands...");
-            RegisterChatCommands();
-            
-            Helper.Print("Loaded.");
-        }
+    private void RegisterChatCommands()
+    {
+        ChatCommandHandler commandHandler = ChatCommandHandler.Instance;
 
-        public override void OnMultiplayerGameStart(Game game, object starterObject)
-        {
-            base.OnMultiplayerGameStart(game, starterObject);
+        commandHandler.RegisterCommand(new MeCommand());
+        commandHandler.RegisterCommand(new PlayerInfoCommand());
+        commandHandler.RegisterCommand(new HealCommand());
+        commandHandler.RegisterCommand(new RemoveHorsesCommand());
             
-            Helper.Print("Adding GameHandler.");
-            game.AddGameHandler<DoFGameHandler>();
-        }
-
-        private void AddConsoleCommands() => DedicatedServerConsoleCommandManager.AddType(typeof(ConsoleCommands));
-        
-        private void RegisterChatCommands()
-        {
-            ChatCommandHandler commandHandler = ChatCommandHandler.Instance;
-
-            commandHandler.RegisterCommand(new MeCommand());
-            commandHandler.RegisterCommand(new PlayerInfoCommand());
-            commandHandler.RegisterCommand(new HealCommand());
-            commandHandler.RegisterCommand(new RemoveHorsesCommand());
+        // Teleport Commands
+        commandHandler.RegisterCommand(new MoveCommand());
+        commandHandler.RegisterCommand(new TeleportMeToCommand());
+        commandHandler.RegisterCommand(new TeleportToMeCommand());
             
-            // Teleport Commands
-            commandHandler.RegisterCommand(new MoveCommand());
-            commandHandler.RegisterCommand(new TeleportMeToCommand());
-            commandHandler.RegisterCommand(new TeleportToMeCommand());
-            
-        }
     }
 }

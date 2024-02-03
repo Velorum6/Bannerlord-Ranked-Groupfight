@@ -1,12 +1,11 @@
 ﻿using TaleWorlds.MountAndBlade;
 
-namespace DoFAdminTools.ChatCommands.AdminCommands
+namespace DoFAdminTools.ChatCommands.AdminCommands;
+
+public abstract class AdminChatCommand: ChatCommand
 {
-    public abstract class AdminChatCommand: ChatCommand
+    public override bool CanExecute(NetworkCommunicator executor)
     {
-        public override bool CanExecute(NetworkCommunicator executor)
-        {
-            return executor.IsAdmin;
-        }
+        return executor.IsAdmin;
     }
 }

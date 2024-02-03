@@ -1,7 +1,7 @@
 ﻿<Module>
     <Name value="DoF Admin Tools"/>
     <Id value="DoFAdminTools"/>
-    <Version value="v2.1.0"/>
+    <Version value="v2.2.0"/>
     <ModuleCategory value="Server"/>
     <SubModules>
         <SubModule>

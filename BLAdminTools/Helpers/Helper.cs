@@ -1,5 +1,5 @@
-﻿using NetworkMessages.FromServer;
-using TaleWorlds.Library;
+﻿using System;
+using NetworkMessages.FromServer;
 using TaleWorlds.MountAndBlade;
 
 namespace DoFAdminTools.Helpers;
@@ -10,16 +10,26 @@ public static class Helper
     private const string WarningPrefix = Prefix + "[WARN] ";
     private const string ErrorPrefix = "[ERROR] ";
 
-    public static void Print(string message) => 
-        Debug.Print(Prefix + message, 0, Debug.DebugColor.DarkGreen);
+    public static void Print(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.DarkGreen;
+        Console.WriteLine(Prefix + message);
+        Console.ResetColor();
+    }
+
+    public static void PrintWarning(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine(WarningPrefix + message);
+        Console.ResetColor();
+    }
         
-        
-    public static void PrintWarning(string message) => 
-        Debug.Print(WarningPrefix + message, 0, Debug.DebugColor.DarkYellow);
-        
-        
-    public static void PrintError(string message) => 
-        Debug.Print(ErrorPrefix + message, 0, Debug.DebugColor.DarkRed);
+    public static void PrintError(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(ErrorPrefix + message);
+        Console.ResetColor();
+    }
         
     public static void SendMessageToAllPeers(string message)
     {

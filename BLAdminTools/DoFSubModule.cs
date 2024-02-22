@@ -48,6 +48,7 @@ public class DoFSubModule: MBSubModuleBase
         commandHandler.RegisterCommand(new PlayerInfoCommand());
         commandHandler.RegisterCommand(new HealCommand());
         commandHandler.RegisterCommand(new RemoveHorsesCommand());
+        commandHandler.RegisterCommand(new SlayCommand());
             
         // Teleport Commands
         commandHandler.RegisterCommand(new MoveCommand());

@@ -7,6 +7,7 @@ namespace DoFAdminTools.ChatCommands.AdminCommands.Teleport;
 public class TeleportToMeCommand : AdminChatCommand
 {
     public override string CommandText => "tptome";
+    public override string UsageDescription => $"{base.UsageDescription} (PLAYERNAME)";
 
     public override string Description =>
         "Teleports all players whose names contain the given text to you, or all players if none is given.";

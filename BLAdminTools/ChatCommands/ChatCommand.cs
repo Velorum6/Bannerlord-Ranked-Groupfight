@@ -7,7 +7,9 @@ public abstract class ChatCommand
     public abstract string CommandText { get; }
         
     public abstract string Description { get; }
-        
+    
+    public virtual string UsageDescription => DoFConfigOptions.Instance.CommandPrefix + CommandText;
+
     /// <summary>
     /// Whether the player attempting to execute the command is allowed to do so - should check for things like
     /// admin status and maybe other factors (game mode etc.) depending on whats needed for the individual command.

@@ -6,6 +6,7 @@ namespace DoFAdminTools.ChatCommands.AdminCommands;
 public class SlayCommand : AdminChatCommand
 {
     public override string CommandText => "slay";
+    public override string UsageDescription => $"{base.UsageDescription} (PLAYERNAME)";
 
     public override string Description =>
         "Kills any player whose name contains the given name, or all players if no name is given.";

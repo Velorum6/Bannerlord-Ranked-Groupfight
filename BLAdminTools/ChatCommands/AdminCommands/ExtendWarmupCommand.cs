@@ -8,21 +8,27 @@ public class ExtendWarmupCommand : AdminChatCommand
 {
     public override string CommandText => "extendwarmup";
 
-    public override string Description =>
-        "Extends the warmup duration to the maximum configured value.";
+    public override string Description => "Resets the warmup timer.";
+
     public override bool Execute(NetworkCommunicator executor, string args)
     {
-        MultiplayerWarmupComponent multiplayerWarmupComponent = Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>();
+        MultiplayerWarmupComponent multiplayerWarmupComponent =
+            Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>();
+        
         if (multiplayerWarmupComponent == null || !multiplayerWarmupComponent.IsInWarmup)
         {
             Helper.SendMessageToPeer(executor, $"You can only extend the warmup duration during the warmup phase.");
-            return true;
+            return false;
         }
+        
+        multiplayerWarmupComponent
+            .GetPropertyInfo("WarmupState")
+            .SetValue(multiplayerWarmupComponent, MultiplayerWarmupComponent.WarmupStates.InProgress);
 
-        PropertyInfo warmupStateProperty = ReflectionExtensions.GetPropertyInfo(multiplayerWarmupComponent, "WarmupState");
-        warmupStateProperty.SetValue(warmupStateProperty, MultiplayerWarmupComponent.WarmupStates.InProgress);
-        MultiplayerTimerComponent timerComponent = ReflectionExtensions.GetFieldValue<MultiplayerTimerComponent>(multiplayerWarmupComponent, "_timerComponent");
-        timerComponent?.StartTimerAsServer(MultiplayerWarmupComponent.TotalWarmupDuration);
+        multiplayerWarmupComponent
+            .GetFieldValue<MultiplayerTimerComponent>("_timerComponent")?
+            .StartTimerAsServer(MultiplayerWarmupComponent.TotalWarmupDuration);
+        
         Helper.SendMessageToAllPeers($"{executor.UserName} extended the warmup duration!");
 
         return true;

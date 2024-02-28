@@ -8,16 +8,19 @@ public class EndWarmupCommand : AdminChatCommand
 {
     public override string CommandText => "endwarmup";
 
-    public override string Description =>
-        "Sets the warmup duration to 30 seconds.";
+    public override string Description => "Sets the warmup timer to 30 seconds.";
+
     public override bool Execute(NetworkCommunicator executor, string args)
     {
-        MultiplayerWarmupComponent multiplayerWarmupComponent = Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>();
+        MultiplayerWarmupComponent multiplayerWarmupComponent =
+            Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>();
+        
         if (multiplayerWarmupComponent == null || !multiplayerWarmupComponent.IsInWarmup)
         {
             Helper.SendMessageToPeer(executor, $"You can only end the warmup during the warmup phase.");
-            return true;
+            return false;
         }
+
         multiplayerWarmupComponent.EndWarmupProgress();
         Helper.SendMessageToAllPeers($"{executor.UserName} reduced the warmup duration.");
 

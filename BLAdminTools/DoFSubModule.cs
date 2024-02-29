@@ -4,6 +4,7 @@ using DoFAdminTools.ChatCommands.AdminCommands;
 using DoFAdminTools.ChatCommands.AdminCommands.Teleport;
 using DoFAdminTools.ChatCommands.PublicCommands;
 using DoFAdminTools.Helpers;
+using DoFAdminTools.MissionBehaviors;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -36,6 +37,20 @@ public class DoFSubModule: MBSubModuleBase
             
         Helper.Print("Adding GameHandler.");
         game.AddGameHandler<DoFGameHandler>();
+    }
+
+    public override void OnMissionBehaviorInitialize(Mission mission)
+    {
+        base.OnMissionBehaviorInitialize(mission);
+
+        MissionMultiplayerGameModeBase gamemode = mission.GetMissionBehavior<MissionMultiplayerGameModeBase>();
+
+        // Disable HP sync between enemies for all Flag Domination Gamemodes (Skirmish/Battle/Captainsmode).
+        if (gamemode is MissionMultiplayerFlagDomination && mission.GetMissionBehavior<HPSyncAntiCheat>() == null)
+        {
+            mission.AddMissionBehavior(new HPSyncAntiCheat());
+        }
+
     }
 
     private void AddConsoleCommands() => DedicatedServerConsoleCommandManager.AddType(typeof(ConsoleCommands));

@@ -12,7 +12,7 @@ public class HPSyncAntiCheat : MissionBehavior
     /// </summary>
     public HPSyncAntiCheat()
     {
-        Helper.Print("Initialized AntiHPSyncAnticheat Mission Behavior");
+        Helper.Print("Initialized HPSyncAntiCheat Mission Behavior");
     }
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;

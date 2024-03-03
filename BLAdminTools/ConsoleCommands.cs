@@ -129,6 +129,22 @@ public static class ConsoleCommands
             
         Helper.Print($"Set ShowAdminPanelUsageMessages to {showMessages}");
     }
+    
+    [UsedImplicitly]
+    [ConsoleCommandMethod("dat_set_prevent_unnecessary_hp_sync",
+        "[True/False] [Only for Flag-Domination game modes] Set whether to prevent synchronizing player HP to their respective opponents teams, which could be used by cheating tools.")]
+    private static void SetPreventUnnecessaryHpSyncCommand(string shouldPreventStr)
+    {
+        if (!bool.TryParse(shouldPreventStr, out bool shouldPrevent))
+        {
+            Helper.PrintError($"dat_set_prevent_unnecessary_hp_sync: Could not parse boolean (True/False) from '{shouldPreventStr}'");
+            return;
+        }
+
+        _configOptions.PreventHpSyncToEnemies = shouldPrevent;
+            
+        Helper.Print($"Set PreventHPSyncToEnemies to {shouldPrevent}");
+    }
 
     [UsedImplicitly]
     [ConsoleCommandMethod("dat_set_and_load_banlist",

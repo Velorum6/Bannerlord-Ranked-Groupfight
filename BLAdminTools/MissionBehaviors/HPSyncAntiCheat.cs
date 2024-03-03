@@ -5,14 +5,14 @@ using NetworkMessages.FromServer;
 
 namespace DoFAdminTools.MissionBehaviors;
 
-public class HPSyncAntiCheat : MissionBehavior
+public class HpSyncAntiCheat : MissionBehavior
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="HPSyncAntiCheat"/> class.
+    /// Initializes a new instance of the <see cref="HpSyncAntiCheat"/> class.
     /// </summary>
-    public HPSyncAntiCheat()
+    public HpSyncAntiCheat()
     {
-        Helper.Print("Initialized HPSyncAntiCheat Mission Behavior");
+        Helper.Print("Initialized HPSyncAntiCheat MissionBehavior");
     }
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
@@ -45,7 +45,7 @@ public class HPSyncAntiCheat : MissionBehavior
     {
         base.OnAgentMount(agent);
 
-        if (agent == null || agent.MountAgent == null || !GameNetwork.IsServerOrRecorder)
+        if (agent?.MountAgent == null || !GameNetwork.IsServerOrRecorder)
         {
             return;
         }
@@ -73,7 +73,7 @@ public class HPSyncAntiCheat : MissionBehavior
         }
 
         MissionPeer missionPeer = networkPeer.GetComponent<MissionPeer>();
-        if (missionPeer == null || missionPeer.Team == null)
+        if (missionPeer?.Team == null)
         {
             return;
         }
@@ -101,48 +101,43 @@ public class HPSyncAntiCheat : MissionBehavior
     {
         foreach (Agent agent in Mission.Agents)
         {
+            int healthToSend;
             if (team == Mission.SpectatorTeam || team == agent.Team || (agent.RiderAgent != null && agent.RiderAgent.Team == team))
             {
                 // Sync correct HP values for teammates and spectators
-                GameNetwork.BeginModuleEventAsServer(networkPeer);
-                GameNetwork.WriteMessage(new SetAgentHealth(agent.Index, (int)agent.Health));
-                GameNetwork.EndModuleEventAsServer();
+                healthToSend = (int) agent.Health;
             }
             else
             {
                 // Fake full hp for enemies
-                GameNetwork.BeginModuleEventAsServer(networkPeer);
-                GameNetwork.WriteMessage(new SetAgentHealth(agent.Index, (int)agent.HealthLimit));
-                GameNetwork.EndModuleEventAsServer();
+                healthToSend = (int) agent.HealthLimit;
             }
+            
+            GameNetwork.BeginModuleEventAsServer(networkPeer);
+            GameNetwork.WriteMessage(new SetAgentHealth(agent.Index, healthToSend));
+            GameNetwork.EndModuleEventAsServer();
         }
     }
 
     private void SyncHealthToRelevantClients(Agent agent)
     {
-        if (!agent.IsMount || agent.RiderAgent != null)
-        {
-            Team targetAgentTeam = !agent.IsMount ? agent.Team : agent.RiderAgent.Team;
-            foreach (NetworkCommunicator networkPeer in GameNetwork.NetworkPeers)
-            {
-                if (networkPeer.IsSynchronized)
-                {
-                    MissionPeer? missionPeer = networkPeer.GetComponent<MissionPeer>();
-                    if (missionPeer.Team != targetAgentTeam && missionPeer.Team != Mission.SpectatorTeam)
-                    {
-                        // Helper.Print($"-- Skip Syncing {agent.Name}{agent.Team?.Side} ({networkPeer.VirtualPlayer.ToString()} to {networkPeer.UserName}{missionPeer.Team?.Side}");
-                        continue;
-                    }
-
-                    GameNetwork.BeginModuleEventAsServer(networkPeer);
-                    GameNetwork.WriteMessage(new SetAgentHealth(agent.Index, (int)agent.Health));
-                    GameNetwork.EndModuleEventAsServer();
-
-                    // Helper.Print($"++ Synced {agent.Name}{agent.Team?.Side} to {networkPeer.UserName}{missionPeer.Team?.Side}");
-                }
-            }
-
+        if (agent.IsMount && agent.RiderAgent == null)
             return;
+        
+        Team targetAgentTeam = !agent.IsMount ? agent.Team : agent.RiderAgent.Team;
+        foreach (NetworkCommunicator networkPeer in GameNetwork.NetworkPeers)
+        {
+            if (!networkPeer.IsSynchronized)
+                continue;
+            
+            MissionPeer missionPeer = networkPeer.GetComponent<MissionPeer>();
+            
+            if (missionPeer.Team != targetAgentTeam && missionPeer.Team != Mission.SpectatorTeam)
+                continue;
+
+            GameNetwork.BeginModuleEventAsServer(networkPeer);
+            GameNetwork.WriteMessage(new SetAgentHealth(agent.Index, (int)agent.Health));
+            GameNetwork.EndModuleEventAsServer();
         }
     }
 }

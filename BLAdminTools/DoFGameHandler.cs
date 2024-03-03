@@ -78,11 +78,15 @@ public class DoFGameHandler : GameHandler
         handlerRegisterer.Register<KickPlayer>(HandleClientEventKickPlayer);
         
         // admin panel options, for logging
-        handlerRegisterer.Register<AdminMuteUnmutePlayer>(HandleAdminMuteUnmutePlayer);
-        handlerRegisterer.Register<AdminRequestClassRestrictionChange>(HandleAdminRequestClassRestrictionChange);
-        handlerRegisterer.Register<AdminRequestEndMission>(HandleAdminRequestEndMission);
-        handlerRegisterer.Register<AdminRequestEndWarmup>(HandleAdminRequestEndWarmup);
-        handlerRegisterer.Register<AdminUpdateMultiplayerOptions>(HandleAdminUpdateMultiplayerOptions);
+        if (_configOptions.ShowAdminPanelUsageMessages ||
+            mode == GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Remove) // in case the option is updated mid-mission, we still want to remove the handlers after
+        {
+            handlerRegisterer.Register<AdminMuteUnmutePlayer>(HandleAdminMuteUnmutePlayer);
+            handlerRegisterer.Register<AdminRequestClassRestrictionChange>(HandleAdminRequestClassRestrictionChange);
+            handlerRegisterer.Register<AdminRequestEndMission>(HandleAdminRequestEndMission);
+            handlerRegisterer.Register<AdminRequestEndWarmup>(HandleAdminRequestEndWarmup);
+            handlerRegisterer.Register<AdminUpdateMultiplayerOptions>(HandleAdminUpdateMultiplayerOptions);
+        }
     }
 
     private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
@@ -159,7 +163,7 @@ public class DoFGameHandler : GameHandler
         if (!peer.IsAdmin)
             return false;
         
-        Helper.SendMessageToAllPeers($"{peer.UserName} has {(message.NewValue ? "disabled" : "enabled")} {message.ClassToChangeRestriction.ToString()} classes  .");
+        Helper.SendMessageToAllPeers($"{peer.UserName} has {(message.NewValue ? "disabled" : "enabled")} {message.ClassToChangeRestriction.ToString()} classes.");
         return true;
     }
 

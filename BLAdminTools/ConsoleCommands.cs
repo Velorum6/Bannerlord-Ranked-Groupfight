@@ -113,6 +113,22 @@ public static class ConsoleCommands
             
         Helper.Print($"Set ShowJoinLeaveMessages to {showMessages}");
     }
+    
+    [UsedImplicitly]
+    [ConsoleCommandMethod("dat_set_show_adminpanel_usage",
+        "[True/False] Set whether to show messages in chat when an admin changes something in the admin panel.")]
+    private static void SetShowAdminPanelUsageMessagesCommand(string show)
+    {
+        if (!bool.TryParse(show, out bool showMessages))
+        {
+            Helper.PrintError($"dat_set_show_adminpanel_usage: Could not parse boolean (True/False) from '{show}'");
+            return;
+        }
+
+        _configOptions.ShowAdminPanelUsageMessages = showMessages;
+            
+        Helper.Print($"Set ShowAdminPanelUsageMessages to {showMessages}");
+    }
 
     [UsedImplicitly]
     [ConsoleCommandMethod("dat_set_and_load_banlist",

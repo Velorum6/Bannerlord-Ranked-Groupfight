@@ -21,8 +21,16 @@ public static class ConsoleCommands
 
         var adminRepo = AdminRepository.Instance;
 
-        // TODO verify the given adminId is an actual playerId
-        adminRepo.AddAdmin(adminId);
+        try
+        {
+            PlayerId playerId = PlayerId.FromString(adminId);
+            // TODO: check if playerId equality checks are fine yet, if so, transform adminRepo to use playerIds
+            adminRepo.AddAdmin(adminId); 
+        }
+        catch (FormatException ex)
+        {
+            Helper.PrintError($"\tCould not parse {adminId} as a PlayerId, skipping.");
+        }
     }
 
     private static readonly Action<string> HandleConsoleCommand =

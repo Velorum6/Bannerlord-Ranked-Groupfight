@@ -11,4 +11,6 @@ public class DoFConfigOptions
     public bool ShowJoinLeaveMessages { get; set; } = true;
 
     public bool ShowAdminPanelUsageMessages { get; set; } = true;
+
+    public bool PreventHpSyncToEnemies { get; set; } = true;
 }

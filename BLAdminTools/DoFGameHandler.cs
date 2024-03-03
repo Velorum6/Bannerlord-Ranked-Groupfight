@@ -76,6 +76,17 @@ public class DoFGameHandler : GameHandler
         handlerRegisterer.Register<PlayerMessageAll>(HandleClientEventPlayerMessageAll);
         handlerRegisterer.Register<PlayerMessageTeam>(HandleClientEventPlayerMessageTeam);
         handlerRegisterer.Register<KickPlayer>(HandleClientEventKickPlayer);
+        
+        // admin panel options, for logging
+        if (_configOptions.ShowAdminPanelUsageMessages ||
+            mode == GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Remove) // in case the option is updated mid-mission, we still want to remove the handlers after
+        {
+            handlerRegisterer.Register<AdminMuteUnmutePlayer>(HandleAdminMuteUnmutePlayer);
+            handlerRegisterer.Register<AdminRequestClassRestrictionChange>(HandleAdminRequestClassRestrictionChange);
+            handlerRegisterer.Register<AdminRequestEndMission>(HandleAdminRequestEndMission);
+            handlerRegisterer.Register<AdminRequestEndWarmup>(HandleAdminRequestEndWarmup);
+            handlerRegisterer.Register<AdminUpdateMultiplayerOptions>(HandleAdminUpdateMultiplayerOptions);
+        }
     }
 
     private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
@@ -90,14 +101,20 @@ public class DoFGameHandler : GameHandler
         
     private bool HandleClientEventKickPlayer(NetworkCommunicator peer, KickPlayer message)
     {
-        if (!message.BanPlayer || !peer.IsAdmin)
+        if (!peer.IsAdmin)
             return false;
-            
-        string banListPath = Path.Combine(DoFSubModule.NativeModulePath, _configOptions.BanListFileName);
-        string playerId = message.PlayerPeer.VirtualPlayer.Id.ToString();
-            
-        File.AppendAllText(banListPath, $"{Environment.NewLine}{playerId} # Player {message.PlayerPeer.UserName}, banned by {peer.UserName} at {DateTime.Now}");
-        Helper.Print($"{peer.UserName} banned {message.PlayerPeer.UserName}!");
+
+        if (message.BanPlayer)
+        {
+            string banListPath = Path.Combine(DoFSubModule.NativeModulePath, _configOptions.BanListFileName);
+            string playerId = message.PlayerPeer.VirtualPlayer.Id.ToString();
+                
+            File.AppendAllText(banListPath, $"{Environment.NewLine}{playerId} # Player {message.PlayerPeer.UserName}, banned by {peer.UserName} at {DateTime.Now}");
+        }
+        
+        string returnMessage = $"{peer.UserName} {(message.BanPlayer ? "banned" : "kicked")} {message.PlayerPeer.UserName}!";
+        Helper.Print(returnMessage);
+        Helper.SendMessageToAllPeers(returnMessage);
             
         return false; // let TWs code handle the actual request
     }
@@ -110,6 +127,53 @@ public class DoFGameHandler : GameHandler
         ChatCommandHandler.Instance.ExecuteCommand(sender, message);
 
         return false; // "hide" message from other MessageHandlers, making it not show up in chat for players
+    }
+    
+    // TODO more sanity checks for all of these, i.e. dont show ended warmup if no warmup is running
+    private bool HandleAdminUpdateMultiplayerOptions(NetworkCommunicator peer, AdminUpdateMultiplayerOptions message)
+    {
+        if (!peer.IsAdmin || message.Options == null)
+            return false;
+        
+        Helper.SendMessageToAllPeers($"{peer.UserName} has updated the server settings.");
+        
+        return true;
+    }
+
+    private bool HandleAdminRequestEndWarmup(NetworkCommunicator peer, AdminRequestEndWarmup message)
+    {
+        if (!peer.IsAdmin)
+            return false;
+        
+        Helper.SendMessageToAllPeers($"{peer.UserName} has ended the warmup.");
+        return true;
+    }
+
+    private bool HandleAdminRequestEndMission(NetworkCommunicator peer, AdminRequestEndMission message)
+    {
+        if (!peer.IsAdmin)
+            return false;
+        
+        Helper.SendMessageToAllPeers($"{peer.UserName} has ended the mission.");
+        return true;
+    }
+
+    private bool HandleAdminRequestClassRestrictionChange(NetworkCommunicator peer, AdminRequestClassRestrictionChange message)
+    {
+        if (!peer.IsAdmin)
+            return false;
+        
+        Helper.SendMessageToAllPeers($"{peer.UserName} has {(message.NewValue ? "disabled" : "enabled")} {message.ClassToChangeRestriction.ToString()} classes.");
+        return true;
+    }
+
+    private bool HandleAdminMuteUnmutePlayer(NetworkCommunicator peer, AdminMuteUnmutePlayer message)
+    {
+        if (!peer.IsAdmin)
+            return false;
+        
+        Helper.SendMessageToAllPeers($"{peer.UserName} has {(message.Unmute ? "unmuted" : "muted")} {message.PlayerPeer.UserName}.");
+        return true;
     }
 
     private void SyncAdminOptionsToPeer(NetworkCommunicator networkPeer)

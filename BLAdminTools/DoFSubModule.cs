@@ -64,11 +64,18 @@ public class DoFSubModule: MBSubModuleBase
         commandHandler.RegisterCommand(new HealCommand());
         commandHandler.RegisterCommand(new RemoveHorsesCommand());
         commandHandler.RegisterCommand(new SlayCommand());
-            
+
+        // Warmup Commands
+        commandHandler.RegisterCommand(new ExtendWarmupCommand());
+        commandHandler.RegisterCommand(new EndWarmupCommand());
+
         // Teleport Commands
         commandHandler.RegisterCommand(new MoveCommand());
         commandHandler.RegisterCommand(new TeleportMeToCommand());
         commandHandler.RegisterCommand(new TeleportToMeCommand());
-            
+        
+        
+        // the help command should always be registered last!
+        commandHandler.RegisterCommand(new HelpCommand());
     }
 }

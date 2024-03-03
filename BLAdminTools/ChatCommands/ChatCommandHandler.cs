@@ -15,7 +15,7 @@ public class ChatCommandHandler
 
     private DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
 
-    public List<ChatCommand> Commands => _registeredCommands.Values.ToList();
+    public ChatCommand[] Commands => _registeredCommands.Values.ToArray();
 
     public bool RegisterCommand(ChatCommand command)
     {

@@ -8,9 +8,10 @@ namespace DoFAdminTools.ChatCommands.AdminCommands.Teleport;
 public class MoveCommand : AdminChatCommand
 {
     public override string CommandText => "move";
+    public override string UsageDescription => $"{base.UsageDescription} [X] [Z]";
 
     public override string Description =>
-        "Teleports you to a new position by provided coordinates from current position. Expects [x] [z]";
+        "Teleports you to a new position by provided coordinates from current position.";
 
     public override bool Execute(NetworkCommunicator executor, string args)
     {

@@ -9,4 +9,6 @@ public class DoFConfigOptions
     public string BanListFileName { get; set; } = "banlist.txt";
 
     public bool ShowJoinLeaveMessages { get; set; } = true;
+
+    public bool ShowAdminPanelUsageMessages { get; set; } = true;
 }

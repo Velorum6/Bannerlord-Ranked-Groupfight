@@ -7,6 +7,7 @@ namespace DoFAdminTools.ChatCommands.AdminCommands;
 public class HealCommand : AdminChatCommand
 {
     public override string CommandText => "heal";
+    public override string UsageDescription => $"{base.UsageDescription} (PLAYERNAME)";
 
     public override string Description =>
         "Heals the player(s) (and their mounts, shields & ammo counts) whose name match the given text, or all if no text is given.";

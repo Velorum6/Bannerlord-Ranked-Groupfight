@@ -6,6 +6,7 @@ namespace DoFAdminTools.ChatCommands.AdminCommands;
 public class PlayerInfoCommand : AdminChatCommand
 {
     public override string CommandText => "playerinfo";
+    public override string UsageDescription => $"{base.UsageDescription} (PLAYERNAME)";
     public override string Description => "Prints information about all players whose names contain the given NAME";
 
     public override bool Execute(NetworkCommunicator executor, string args)

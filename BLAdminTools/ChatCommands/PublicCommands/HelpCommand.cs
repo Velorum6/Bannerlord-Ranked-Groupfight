@@ -32,7 +32,7 @@ public class HelpCommand: ChatCommand
                 Helper.SendMessageToPeer(executor, command.CommandText);
         }
         
-        Helper.SendMessageToPeer(executor, $"Type {DoFConfigOptions.Instance.CommandPrefix}{CommandText} <command> to learn more about any command!");
+        Helper.SendMessageToPeer(executor, $"Type {DoFConfigOptions.Instance.CommandPrefix}{CommandText} [COMMANDNAME] to learn more about any command!");
 
         return true;
     }

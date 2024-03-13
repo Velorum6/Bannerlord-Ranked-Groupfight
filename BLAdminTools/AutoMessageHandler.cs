@@ -26,7 +26,7 @@ public class AutoMessageHandler
         _timer.Elapsed += TimerElapsed;
         
         _timer.Start();
-        Helper.PrintWarning("AutoMessages: Starting.");
+        Helper.Print("AutoMessages: Starting.");
 
         Enabled = true;
     }
@@ -57,11 +57,26 @@ public class AutoMessageHandler
             return;
         }
 
-        // actually send the message
-        string message = _configOptions.AutoMessages[_nextMessageIndex];
-        Helper.SendMessageToAllPeers(message);
-        Helper.Print($"AutoMessages: Sent message #{_nextMessageIndex + 1} (out of {_configOptions.AutoMessages.Count}) ('{message}').");
-        
+        SendMessage();
+
         _nextMessageIndex = (_nextMessageIndex + 1) % _configOptions.AutoMessages.Count;
+    }
+
+    private void SendMessage()
+    {
+        string message = _configOptions.AutoMessages[_nextMessageIndex];
+        
+        if (_configOptions.AutoMessageType == MessageType.CHAT)
+            Helper.SendMessageToAllPeers(message);
+        else Helper.SendAdminMessageToAllPeers(message, isBroadcast: _configOptions.AutoMessageType == MessageType.BROADCAST);
+        
+        Helper.Print($"AutoMessages: Sent message #{_nextMessageIndex + 1} (out of {_configOptions.AutoMessages.Count}) ('{message}').");
+    }
+
+    public enum MessageType
+    {
+        CHAT,
+        ADMINCHAT,
+        BROADCAST
     }
 }

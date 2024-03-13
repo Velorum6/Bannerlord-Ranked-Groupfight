@@ -19,4 +19,6 @@ public class DoFConfigOptions
     public List<string> AutoMessages { get; } = new();
 
     public int AutoMessageInterval { get; set; } = 60;
+
+    public AutoMessageHandler.MessageType AutoMessageType { get; set; } = AutoMessageHandler.MessageType.CHAT;
 }

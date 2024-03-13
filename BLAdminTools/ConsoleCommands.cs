@@ -188,6 +188,20 @@ public static class ConsoleCommands
     }
 
     [UsedImplicitly]
+    [ConsoleCommandMethod("dat_set_automessage_type", "Sets the type of message to send when sending AutoMessages - CHAT, ADMINCHAT or BROADCAST.")]
+    private static void SetAutoMessageType(string type)
+    {
+        if (!Enum.TryParse(type, true, out AutoMessageHandler.MessageType messageType))
+        {
+            Helper.PrintError($"Can't parse '{type}' as a valid MessageType.");
+            return;
+        }
+
+        _configOptions.AutoMessageType = messageType;
+        Helper.Print($"Set AutoMessageType to {messageType}");
+    }
+
+    [UsedImplicitly]
     [ConsoleCommandMethod("dat_set_and_load_banlist",
         "Set the ban list file, then load all bans contained in the file if it exists.")]
     private static void SetAndLoadBanlistCommand(string banListPath)

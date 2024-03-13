@@ -10,6 +10,7 @@ public class SlayCommand : AdminChatCommand
 
     public override string Description =>
         "Kills any player whose name contains the given name, or all players if no name is given.";
+    
     public override bool Execute(NetworkCommunicator executor, string args)
     {
         bool checkName = args.Length > 0;
@@ -17,7 +18,7 @@ public class SlayCommand : AdminChatCommand
         
         foreach (var peer in GameNetwork.NetworkPeers)
         {
-            if (!checkName && !peer.UserName.Contains(args))
+            if (checkName && !peer.UserName.Contains(args))
                 continue;
             
             if (peer.ControlledAgent == null)

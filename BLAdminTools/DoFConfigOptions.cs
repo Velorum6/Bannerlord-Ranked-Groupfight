@@ -1,4 +1,6 @@
-﻿namespace DoFAdminTools;
+﻿using System.Collections.Generic;
+
+namespace DoFAdminTools;
 
 public class DoFConfigOptions
 {
@@ -13,4 +15,8 @@ public class DoFConfigOptions
     public bool ShowAdminPanelUsageMessages { get; set; } = true;
 
     public bool PreventHpSyncToEnemies { get; set; } = true;
+
+    public List<string> AutoMessages { get; } = new();
+
+    public int AutoMessageInterval { get; set; } = 60;
 }

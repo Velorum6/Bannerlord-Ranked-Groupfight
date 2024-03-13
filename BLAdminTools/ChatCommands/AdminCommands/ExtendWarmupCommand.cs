@@ -9,6 +9,11 @@ public class ExtendWarmupCommand : AdminChatCommand
     public override string CommandText => "extendwarmup";
 
     public override string Description => "Resets the warmup timer.";
+    
+    public override bool CanExecute(NetworkCommunicator executor)
+    {
+        return base.CanExecute(executor) && Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>() != null;
+    }
 
     public override bool Execute(NetworkCommunicator executor, string args)
     {

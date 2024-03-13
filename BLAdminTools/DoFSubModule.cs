@@ -15,6 +15,8 @@ public class DoFSubModule: MBSubModuleBase
 {
     public static readonly string NativeModulePath =
         Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../Modules/Native/"));
+
+    private AutoMessageHandler _autoMessageHandler;
         
     protected override void OnSubModuleLoad()
     {
@@ -42,6 +44,9 @@ public class DoFSubModule: MBSubModuleBase
     public override void OnMissionBehaviorInitialize(Mission mission)
     {
         base.OnMissionBehaviorInitialize(mission);
+
+        if (_autoMessageHandler == null || !_autoMessageHandler.Enabled)
+            _autoMessageHandler = new AutoMessageHandler();
         
         if (!DoFConfigOptions.Instance.PreventHpSyncToEnemies)
             return;

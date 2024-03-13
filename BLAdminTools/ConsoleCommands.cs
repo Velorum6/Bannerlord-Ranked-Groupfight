@@ -11,6 +11,7 @@ namespace DoFAdminTools;
 public static class ConsoleCommands
 {
     private static DoFConfigOptions _configOptions = DoFConfigOptions.Instance;
+    private static readonly int MaxAutoMessageLength = 256;
         
     [UsedImplicitly]
     [ConsoleCommandMethod("dat_add_admin",
@@ -144,6 +145,46 @@ public static class ConsoleCommands
         _configOptions.PreventHpSyncToEnemies = shouldPrevent;
             
         Helper.Print($"Set PreventHPSyncToEnemies to {shouldPrevent}");
+    }
+
+    [UsedImplicitly]
+    [ConsoleCommandMethod("dat_add_automessage", "Adds a new message to the AutoMessage system.")]
+    private static void AddAutoMessage(string message)
+    {
+        string trimmedMessage = message.Trim();
+        if (string.IsNullOrWhiteSpace(trimmedMessage))
+        {
+            Helper.PrintError($"Can't add '{message}'; empty text.");
+            return;
+        }
+
+        if (trimmedMessage.Length > MaxAutoMessageLength)
+        {
+            Helper.PrintError($"Can't add '{message}'; too long.");
+            return;
+        }
+
+        _configOptions.AutoMessages.Add(trimmedMessage);
+        Helper.Print($"Added AutoMessage '{trimmedMessage}'");
+    }
+
+    [UsedImplicitly]
+    [ConsoleCommandMethod("dat_set_automessage_interval", 
+        "Sets how often (in seconds) automated server messages are sent. Set to a negative value or zero to send no messages.")]
+    private static void SetAutoMessageInterval(string intervalStr)
+    {
+        if (!int.TryParse(intervalStr, out int interval))
+        {
+            Helper.PrintError($"Could not parse '{intervalStr}' as number for AutoMessageInterval.");
+            return;
+        }
+
+        _configOptions.AutoMessageInterval = interval;
+        
+        if (interval <= 0)
+            Helper.PrintWarning($"AutoMessageInterval set to {interval}, no messages will be sent.");
+        else
+            Helper.Print($"AutoMessageInterval set to {interval}.");
     }
 
     [UsedImplicitly]

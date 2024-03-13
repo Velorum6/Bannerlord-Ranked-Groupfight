@@ -33,9 +33,21 @@ Note that anything written in ALLCAPS is a parameter. If a parameter is containe
     - `!removehorses`
       - Remove all horses from the scene that do not currently have a rider.
       - Provided by Doseq - thank you!
+    - `!slay <PLAYERNAME>`
+      - Slays all alive players whose names contain the given `PLAYERNAME`, or all players if no `PLAYERNAME` is given.
+    - `!extendwarmup`
+      - Resets the warmup timer to its configured maximum, if it is currently active.
+      - Provided by Gotha - thank you!
+    - `!endwarmup`
+      - Reduces the warmup timer to 30 seconds, if it is currently active.
+        - This is the same functionality as found in the admin panel; it is re-added as a chat command here for quick use for those that prefer to use it this way.
+      - Provided by Gotha - thank you!
   - **Public Commands** - These commands can be used by every player.
     - `!me`
       - Shows the using player their PlayerId.
+    - `!help <COMMANDNAME>`
+      - If `<COMMANDNAME>` is not set, shows a list of all currently available commands. Includes admin commands if the player is an admin.
+      - If `<COMMANDNAME>` is set, shows information for the given command, assuming there is one matching the name.
 - New Configuration Options / Console Commands
   - `dat_add_admin ADMINID` - Add a player id to the list of admins. When a player joins the server and their id is on the list, they can use the ingame admin panel and admin chat commands.
     - The player id can be obtained by running `!me` (by the player themselves) or `!playerinfo PLAYERNAME` (by an admin) ingame.
@@ -48,6 +60,9 @@ Note that anything written in ALLCAPS is a parameter. If a parameter is containe
     - Note that `/` is reserved for chat channels by TaleWorlds; it can not be used here.
   - `dat_set_show_joinleave_messages TRUE|FALSE`
     - Set whether to show a message in chat when a player joins or leaves the server. Options are `TRUE` or `FALSE`.
+  - `dat_set_show_adminpanel_usage TRUE|FALSE`
+    - Set whether actions taken by admins using TaleWorlds admin panel should also cause a chat message to be sent to all players, as admin actions using chat commands do.
+    - Enabled by default.
   - `dat_set_and_load_banlist FILENAME`
     - Set the path to a ban list file (within your `YOURBLSERVER/Modules/Native/` folder, as with `dat_include`), then load all bans stored within the given file.
     - By default, banning someone only lasts until the server is restarted. This command allows you to persist bans across server restarts.
@@ -55,17 +70,36 @@ Note that anything written in ALLCAPS is a parameter. If a parameter is containe
       - Similarly, if you run multiple servers using the same files, bans from one server will only be transferred to the others when they execute this command, re-reading the banlist file.
     - Anything in a line after a `#` is ignored. You can use this to store extra information on the PlayerId before it (by default, the name of the player, of the banning admin and the date of the ban are stored) or to (temporarily) exclude bans from being loaded. 
       - You can permanently remove a ban by deleting the relevant line from the banlist file. Note that a server restart is required for the unban to take effect.
+  - `dat_set_prevent_unnecessary_hp_sync TRUE|FALSE` **FOR SKIRMISH/CAPTAIN/BATTLE ONLY**
+    - In the game modes mentioned above, by default, players current hit points are synchronized to *all* players on the server. For competitive environments especially, this information could be used by client-side cheating software. Enabling this option will replace the default behaviour for synchronizing player hitpoints with a custom one, synchronizing the hitpoints only to teeammates and spectators (to allow for streamers to still have access to the information).
+    - This option is enabled by default. 
+      - For servers not running any of the game modes mentioned above, nothing will happen, even if it is enabled.
+    - Provided by Gotha - thank you!
+  - `dat_add_automessage MESSAGE`
+    - Adds a message to the list of messages to be automatically sent to all players by the server.
+    - If no messages are configured by the user, no messages will be sent.
+    - You may add as many messages as you like, though each message is currently limited to 256 characters.
+  - `dat_set_automessage_interval INTERVAL`
+    - How often the server should send the messages configured using `dat_add_automessage` to the players, in seconds.
+    - By default, messages are sent every 60 seconds.
+    - You may disable the system entirely by setting a value of zero or below (or by not adding any messages).
+  - `dat_set_automessage_type CHAT|ADMINCHAT|BROADCAST`
+    - In what way the server should send the AutoMessages to the players.
+      - `CHAT` is a white chat message
+      - `ADMINCHAT` is a purple chat message
+      - `BROADCAST` is a purple chat message with an extra sound notification as well as a popup in the center-top of the players screens.
+    - By default, messages are sent as `CHAT` messages.
 
 ## Planned Features
 
 Below is a list of features currently planned to be added to the module. If you have any other ideas, feel free to reach out and suggest them - or open a [Merge Request](https://gitlab.com/Krex/dofadmintools/-/merge_requests)!
 
-- [ ] Timed messages - Add options to add one or more messages to be sent to players by the server on a configurable interval. 
+- [X] Timed messages - Add options to add one or more messages to be sent to players by the server on a configurable interval. 
 - [ ] Scene Scripts - Not a whole lot is possible here, but teleport doors will come.
 - [ ] Further Chat Commands
-  - [ ] `!help`
+  - [X] `!help`
   - [X] `!heal`
-  - [ ] `!extendwarmup`
+  - [X] `!extendwarmup`
   - [ ] ...
   - [X] Multiple teleport variations (to player, player to me, ...)
 - [ ] Logging

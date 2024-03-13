@@ -7,7 +7,7 @@ namespace DoFAdminTools.Helpers;
 public static class Helper
 {
     private const string Prefix = "[DAT] ";
-    private const string WarningPrefix = Prefix + "[WARN] ";
+    private const string WarningPrefix = Prefix + "[WARNING] ";
     private const string ErrorPrefix = "[ERROR] ";
 
     public static void Print(string message)
@@ -43,5 +43,12 @@ public static class Helper
         GameNetwork.BeginModuleEventAsServer(peer);
         GameNetwork.WriteMessage(new ServerMessage(Prefix + message));
         GameNetwork.EndModuleEventAsServer();
+    }
+
+    public static void SendAdminMessageToAllPeers(string message, bool isBroadcast = false)
+    {        
+        GameNetwork.BeginBroadcastModuleEvent();
+        GameNetwork.WriteMessage(new ServerAdminMessage(message, isBroadcast));
+        GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.None);
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using DoFAdminTools.Helpers;
 using DoFAdminTools.Repositories;
 using JetBrains.Annotations;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.PlayerServices;
 
@@ -254,5 +255,13 @@ public static class ConsoleCommands
         }
             
         Helper.Print("\tDone reading ban list");
+    }
+
+    [UsedImplicitly]
+    [ConsoleCommandMethod("dat_no_more_spam", "Stops the server from spamming Debug messages to the console")]
+    private static void NoMoreDebugSpam()
+    {
+        Debug.DebugManager = null;
+        Helper.Print("Debug Messages have been disabled.");
     }
 }

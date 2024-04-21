@@ -8,7 +8,7 @@ public static class Helper
 {
     private const string Prefix = "[DAT] ";
     private const string WarningPrefix = Prefix + "[WARNING] ";
-    private const string ErrorPrefix = "[ERROR] ";
+    private const string ErrorPrefix = Prefix + "[ERROR] ";
 
     public static void Print(string message)
     {

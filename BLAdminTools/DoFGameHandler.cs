@@ -92,14 +92,18 @@ public class DoFGameHandler : GameHandler
 
     private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
     {
-        message.SetFieldValue("ReceiverList", new List<VirtualPlayer>());
+        message.GetPropertyInfo("ReceiverList")?
+            .SetMethod?
+            .Invoke(message, new object[] { new List<VirtualPlayer>() });
         HandleChatMessage(peer, message.Message);
         return true;
     }
 
     private bool HandleClientEventPlayerMessageTeam(NetworkCommunicator peer, PlayerMessageTeam message)
     {
-        message.SetFieldValue("ReceiverList", new List<VirtualPlayer>());
+        message.GetPropertyInfo("ReceiverList")?
+            .SetMethod?
+            .Invoke(message, new object[] { new List<VirtualPlayer>() });
         HandleChatMessage(peer, message.Message);
         return true;
     }
@@ -131,7 +135,7 @@ public class DoFGameHandler : GameHandler
 
         ChatCommandHandler.Instance.ExecuteCommand(sender, message);
 
-        return false;
+        return false; // "hide" message from other MessageHandlers, making it not show up in chat for players
     }
     
     // TODO more sanity checks for all of these, i.e. dont show ended warmup if no warmup is running

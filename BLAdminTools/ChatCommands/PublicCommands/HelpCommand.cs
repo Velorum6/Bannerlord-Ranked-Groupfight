@@ -6,11 +6,26 @@ namespace DoFAdminTools.ChatCommands.PublicCommands;
 
 public class HelpCommand: ChatCommand
 {
-    private readonly ChatCommand[] _registeredCommands = ChatCommandHandler.Instance.Commands;
+    private readonly ChatCommand[] _registeredCommands;
     
     public override string CommandText => "help";
     public override string UsageDescription => $"{base.UsageDescription} (COMMANDNAME)";
     public override string Description => "Prints this.";
+
+    public HelpCommand()
+    {
+        // this help command isn't part of the list at time of creation, so add it manually
+        var commands = ChatCommandHandler.Instance.Commands;
+        int registeredAmount = commands.Length;
+        
+        _registeredCommands = new ChatCommand[registeredAmount + 1];
+        for (int i = 0; i < registeredAmount; i++)
+        {
+            _registeredCommands[i] = commands[i];
+        }
+
+        _registeredCommands[registeredAmount] = this;
+    }
 
     public override bool CanExecute(NetworkCommunicator executor) => true;
 

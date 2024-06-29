@@ -81,7 +81,7 @@ public class DoFSubModule: MBSubModuleBase
         commandHandler.RegisterCommand(new TeleportToMeCommand());
         
         
-        // the help command should always be registered last!
+        // the help command should always be registered last, as it only shows commands registered *before* it.
         commandHandler.RegisterCommand(new HelpCommand());
     }
 }

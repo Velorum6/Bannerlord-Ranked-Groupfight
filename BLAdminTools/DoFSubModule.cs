@@ -70,6 +70,7 @@ public class DoFSubModule: MBSubModuleBase
         commandHandler.RegisterCommand(new HealCommand());
         commandHandler.RegisterCommand(new RemoveHorsesCommand());
         commandHandler.RegisterCommand(new SlayCommand());
+        commandHandler.RegisterCommand(new ListSpectatorsCommand());
 
         // Warmup Commands
         commandHandler.RegisterCommand(new ExtendWarmupCommand());

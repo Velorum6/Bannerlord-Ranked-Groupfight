@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DoFAdminTools.ChatCommands;
 using DoFAdminTools.Helpers;
@@ -91,12 +92,16 @@ public class DoFGameHandler : GameHandler
 
     private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
     {
-        return HandleChatMessage(peer, message.Message);
+        message.SetFieldValue("ReceiverList", new List<VirtualPlayer>());
+        HandleChatMessage(peer, message.Message);
+        return true;
     }
 
     private bool HandleClientEventPlayerMessageTeam(NetworkCommunicator peer, PlayerMessageTeam message)
     {
-        return HandleChatMessage(peer, message.Message);
+        message.SetFieldValue("ReceiverList", new List<VirtualPlayer>());
+        HandleChatMessage(peer, message.Message);
+        return true;
     }
         
     private bool HandleClientEventKickPlayer(NetworkCommunicator peer, KickPlayer message)
@@ -126,7 +131,7 @@ public class DoFGameHandler : GameHandler
 
         ChatCommandHandler.Instance.ExecuteCommand(sender, message);
 
-        return false; // "hide" message from other MessageHandlers, making it not show up in chat for players
+        return false;
     }
     
     // TODO more sanity checks for all of these, i.e. dont show ended warmup if no warmup is running

@@ -48,6 +48,8 @@ Note that anything written in ALLCAPS is a parameter. If a parameter is containe
     - `!help <COMMANDNAME>`
       - If `<COMMANDNAME>` is not set, shows a list of all currently available commands. Includes admin commands if the player is an admin.
       - If `<COMMANDNAME>` is set, shows information for the given command, assuming there is one matching the name.
+    - `specs`
+      - Prints a list of all players currently in spectator mode.
 - New Configuration Options / Console Commands
   - `dat_add_admin ADMINID` - Add a player id to the list of admins. When a player joins the server and their id is on the list, they can use the ingame admin panel and admin chat commands.
     - The player id can be obtained by running `!me` (by the player themselves) or `!playerinfo PLAYERNAME` (by an admin) ingame.
@@ -89,6 +91,10 @@ Note that anything written in ALLCAPS is a parameter. If a parameter is containe
       - `ADMINCHAT` is a purple chat message
       - `BROADCAST` is a purple chat message with an extra sound notification as well as a popup in the center-top of the players screens.
     - By default, messages are sent as `CHAT` messages.
+  - `dat_no_more_spam`
+    - Disables the default DebugManager, preventing many messages usually spammed to the console from being printed, most notably the notifications for heartbeat messages to TaleWorlds main server.
+    - Note that some mods may use the same mechanism to print their information messages, and those will be lost, too, if this option is set in the config.
+    - Can not be re-enabled at runtime; if you do notice you need the debug messages, you will have to restart your server without this option in its config.
 
 ## Planned Features
 

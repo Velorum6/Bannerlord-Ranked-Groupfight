@@ -92,19 +92,23 @@ public class DoFGameHandler : GameHandler
 
     private bool HandleClientEventPlayerMessageAll(NetworkCommunicator peer, PlayerMessageAll message)
     {
-        message.GetPropertyInfo("ReceiverList")?
-            .SetMethod?
-            .Invoke(message, new object[] { new List<VirtualPlayer>() });
-        HandleChatMessage(peer, message.Message);
+        if (!HandleChatMessage(peer, message.Message))
+        {
+            message.GetPropertyInfo("ReceiverList")?
+                .SetMethod?
+                .Invoke(message, new object[] { new List<VirtualPlayer>() });
+        }
         return true;
     }
 
     private bool HandleClientEventPlayerMessageTeam(NetworkCommunicator peer, PlayerMessageTeam message)
     {
-        message.GetPropertyInfo("ReceiverList")?
-            .SetMethod?
-            .Invoke(message, new object[] { new List<VirtualPlayer>() });
-        HandleChatMessage(peer, message.Message);
+        if (!HandleChatMessage(peer, message.Message))
+        {
+            message.GetPropertyInfo("ReceiverList")?
+                .SetMethod?
+                .Invoke(message, new object[] { new List<VirtualPlayer>() });
+        }
         return true;
     }
         

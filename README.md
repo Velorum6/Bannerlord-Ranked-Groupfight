@@ -1,20 +1,54 @@
-# DoF Admin Tools (DAT) for Bannerlord Servers
+# DoF Admin Tools - Bannerlord Ranked Groupfight Edition
 
-While TaleWorlds has greatly improved the ingame admin tools with update 1.2.8, some options are still lacking. 
+> **⚠️ IMPORTANT**: This is a **modified version** of the original [DoF Admin Tools](https://gitlab.com/Krex/dofadmintools) by Krex, specifically customized for the **Bannerlord Ranked Groupfight** server by Velorum.
 
-DAT aims to build on what TaleWorlds have given us by adding some new config options as well as ingame chat commands for actions not covered by TaleWorlds own administration panel.
+## 🎯 **About This Fork**
 
-## Installation
-1. Download the latest version ("MODULE RELEASE") from the [Releases](https://gitlab.com/Krex/dofadmintools/-/releases)-page.
-2. Unzip into `YOURBLSERVER/Modules/`.
-3. Add to startup arguments for your server: `_MODULES_*Native*Multiplayer*DoFAdminTools*_MODULES_`.
-    - Make sure to add after `Native` and `Multiplayer`. Load order with other modules should not matter.
+This repository contains a heavily modified version of the original DoF Admin Tools, enhanced with additional behaviors and features specifically designed for competitive ranked groupfight gameplay:
 
-## Features
+- **AutoBalanceBehavior**: Intelligent team balancing based on MMR and party groups
+- **HitCounter**: Advanced hit tracking and statistics system
+- **InfantryOnlyBehavior**: Enforces infantry-only restrictions for competitive play
+- **Multikill**: Multikill detection and announcement system
+- **HPSyncAntiCheat**: Anti-cheat HP synchronization controls
+- **Party Management**: Enhanced party system for organized competitive play
+- **Mirror Matchup**: Enforces mirror matchups on map changes
+- **Player Statistics**: Comprehensive player stats and MMR tracking
 
-Below is a list of all features currently implemented in DAT. 
+## 🏆 **Original DoF Admin Tools**
 
-Note that anything written in ALLCAPS is a parameter. If a parameter is contained in `<ANGLEDBRACKETS>`, it is optional and does not *need* to be provided. A pipe symbol `|` denotes that the parameter may be either what is to the right or what is to the left of it.
+While TaleWorlds has greatly improved the ingame admin tools with update 1.2.8, some options are still lacking. The original DAT aims to build on what TaleWorlds have given us by adding new config options and ingame chat commands for actions not covered by TaleWorlds own administration panel.
+
+**Original Repository**: [GitLab - Krex/DoFAdminTools](https://gitlab.com/Krex/dofadmintools)
+
+## 📦 **Installation**
+
+### For Bannerlord Ranked Groupfight Server
+This modified version is specifically designed for the Bannerlord Ranked Groupfight server. If you're running a different server, consider using the [original DoF Admin Tools](https://gitlab.com/Krex/dofadmintools) instead.
+
+1. Download the latest release from this repository
+2. Extract to your Bannerlord server's `Modules/` directory
+3. Add to server startup arguments: `_MODULES_*Native*Multiplayer*DoFAdminTools*_MODULES_`
+4. Configure the additional behaviors through console commands (see Features section)
+
+> **Note**: Load order should be after `Native` and `Multiplayer` modules.
+
+## 🚀 **Enhanced Features**
+
+This fork includes all original DoF Admin Tools features PLUS the following additions specifically for competitive ranked gameplay:
+
+### **New Mission Behaviors**
+- **AutoBalanceBehavior**: Automatically balances teams based on MMR and party groups
+- **HitCounter**: Tracks and displays hit statistics for competitive analysis
+- **InfantryOnlyBehavior**: Enforces infantry-only restrictions for fair competitive play
+- **Multikill**: Detects and announces multikill achievements
+- **HPSyncAntiCheat**: Prevents HP synchronization exploits in competitive modes
+- **Party Management**: Advanced party system for organized team play
+- **Player Statistics**: Comprehensive MMR and performance tracking
+
+### **Original DoF Admin Tools Features**
+
+Below is a list of all features from the original DAT implementation:
 
 - Chat Commands
   - **Admin Commands** - These commands can only be used by admins.
@@ -114,29 +148,57 @@ Below is a list of features currently planned to be added to the module. If you 
 - [ ] ...
 
 
-## For Developers
-The following information is mainly intended for those interested in building the tools from source themselves, contributing to their further development or building upon them.
+## 🛠️ **For Developers**
 
-### Building from source
-1. Download or Clone this repository
-2. Set the `BLSERVER` environment variable to the path of your local server files installation, e.g. `D:\SteamLibrary\steamapps\common\Mount & Blade II Dedicated Server`.
-   - You may need to restart your PC for msbuild to pick up on the newly set environment variable.
-3. Open in your favorite IDE (personally using Rider, Visual Studio should work as well)
-4. Build.
+### Building from Source
+1. Clone this repository
+2. Set the `BLSERVER` environment variable to your Bannerlord server path:
+   ```bash
+   # Windows
+   set BLSERVER=C:\Path\To\Bannerlord\Server
+   
+   # Linux/Mac  
+   export BLSERVER=/path/to/bannerlord/server
+   ```
+3. Open in Visual Studio or JetBrains Rider
+4. Build the project
 
-Please note that currently, the build does not assemble a full, ready-to-use-module. Copying together the `SubModule.xml` as well as the `DoFAdminTools.dll` file into the correct folders is currently still a manual process. This will be fixed soonTM.
+### Code Structure
+This fork maintains the original DoF Admin Tools architecture while adding:
+- **MissionBehaviors/**: New competitive gameplay behaviors
+- **Party/**: Enhanced party management system
+- **PlayerStats/**: MMR and statistics tracking
+- **Additional Commands**: New chat commands for competitive features
 
-### Basic guide
-TODO: Add a basic guide for adding new chat/console commands and anything else relevant.
+## 📄 **License & Credits**
 
 ### License
-All code in this repository is licensed under the MIT License. See the [LICENSE](https://gitlab.com/Krex/dofadmintools/-/blob/master/LICENSE) file for the full license text.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Contributing
-As per the license, you are free to build on the code provided here pretty much as you see fit. That said, if you do add something cool, please consider opening a Merge Request for it [here](https://gitlab.com/Krex/dofadmintools/-/merge_requests)!
+### Credits & Acknowledgments
+- **Original Developer**: [Krex](https://gitlab.com/Krex) - Creator of DoF Admin Tools
+- **Fork Developer**: **Velorum** - Enhanced version for Bannerlord Ranked Groupfight
+- **Contributors**: Gotha, Doseq, and the community for original features
+- **TaleWorlds**: For the Bannerlord platform and API
+- **Community**: All server admins and players who provided feedback
 
-If you do open a merge request, please keep in mind:
-- Please give your merge request a proper title and a (short) description
-- No use of Harmony unless 100% necessary - preferably never. 
-  - Reflection is fine, though please try and keep it to a minimum
-- If possible, make things configurable via console commands :)
+## 🤝 **Contributing**
+
+This is a specialized fork for competitive gameplay. For general DoF Admin Tools contributions, please consider the [original repository](https://gitlab.com/Krex/dofadmintools).
+
+If you have suggestions for competitive features or bug fixes specific to this fork:
+1. Fork this repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📞 **Support**
+
+- **Issues**: [GitHub Issues](https://github.com/Velorum6/Bannerlord-Ranked-Groupfight/issues)
+- **Original DoF Tools**: [GitLab Repository](https://gitlab.com/Krex/dofadmintools)
+
+---
+
+**Made with ❤️ for the competitive Bannerlord community**
+
+*This fork builds upon the excellent foundation provided by Krex's original DoF Admin Tools.*

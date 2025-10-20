@@ -28,7 +28,7 @@ public class DoFGameHandler : GameHandler
     protected override void OnPlayerConnect(VirtualPlayer peer)
     {
         string peerId = peer.Id.ToString();
-
+        
         if (AdminRepository.Instance.IsAdmin(peerId) && peer.Communicator is NetworkCommunicator networkPeer)
         {
             networkPeer.UpdateForJoiningCustomGame(true); // set as admin
@@ -43,7 +43,7 @@ public class DoFGameHandler : GameHandler
             Helper.SendMessageToAllPeers($"{peer.UserName} joined the server.");
         }
     }
-
+    
     protected override void OnPlayerDisconnect(VirtualPlayer peer)
     {
         base.OnPlayerDisconnect(peer);

@@ -10,13 +10,14 @@ public class EndWarmupCommand : AdminChatCommand
 
     public override string Description => "Sets the warmup timer to 30 seconds.";
 
-    public override bool CanExecute(NetworkCommunicator executor)
-    {
-        return base.CanExecute(executor) && Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>() != null;
-    }
+    public override bool CanExecute(NetworkCommunicator executor) => true;
 
     public override bool Execute(NetworkCommunicator executor, string args)
     {
+        if (!executor.IsAdmin){
+            Helper.SendMessageToPeer(executor, "Only admins can use this command.");
+            return true;
+                };
         MultiplayerWarmupComponent multiplayerWarmupComponent =
             Mission.Current.GetMissionBehavior<MultiplayerWarmupComponent>();
         

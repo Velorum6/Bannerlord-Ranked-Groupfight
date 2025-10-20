@@ -6,7 +6,7 @@ namespace DoFAdminTools.Helpers;
 
 public static class Helper
 {
-    private const string Prefix = "[DAT] ";
+    private const string Prefix = "";
     private const string WarningPrefix = Prefix + "[WARNING] ";
     private const string ErrorPrefix = Prefix + "[ERROR] ";
 

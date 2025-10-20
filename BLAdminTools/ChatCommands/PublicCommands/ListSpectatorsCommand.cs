@@ -6,14 +6,14 @@ namespace DoFAdminTools.ChatCommands.PublicCommands;
 
 public class ListSpectatorsCommand: ChatCommand
 {
-    public override string CommandText => "specs";
+    public override string CommandText => "spectator";
     public override string Description => "Lists all players currently spectating the game";
     public override bool CanExecute(NetworkCommunicator executor) => true;
     
     public override bool Execute(NetworkCommunicator executor, string args)
     {
         var specTeam = Mission.Current.SpectatorTeam;
-        
+
         Helper.SendMessageToPeer(executor, "----Spectators:----");
         foreach (var peer in GameNetwork.NetworkPeers)
         {

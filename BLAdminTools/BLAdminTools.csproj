@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     
     <PropertyGroup>
         <BuildDir>.\bin\Release\DoFAdminTools\bin</BuildDir>
@@ -67,9 +67,44 @@
         <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\System.Numerics.Vectors.dll">
             <Private>False</Private>
         </Reference>
+
+		<Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.MountAndBlade.DedicatedCustomServer.dll">
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.MountAndBlade.ListedServer.dll">
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\System.Data.SQLite.dll">
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\SQLite.Interop.dll">
+			<Private>False</Private>
+		</Reference>
+        
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.ObjectSystem.dll">
+			<Private>False</Private>
+		</Reference>
+
+        <Reference Include="$(BLSERVER)\bin\Win64_Shipping_Server\TaleWorlds.Engine.dll">
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="TaleWorlds.Localization">
+		  <HintPath>..\..\..\..\Bannerlord Server\bin\Win64_Shipping_Server\TaleWorlds.Localization.dll</HintPath>
+		</Reference>
+		
     </ItemGroup>
 
     <ItemGroup>
         <ContentWithTargetPath Include="SubModule.xml" TargetPath="..\..\SubModule.xml" CopyToOutputDirectory="Always" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    </ItemGroup>
+
+
 </Project>

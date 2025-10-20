@@ -1,7 +1,47 @@
+# Build outputs
 bin/
 obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
-/.idea/
-BLAdminTools.sln.DotSettings.user
+*.dll
+*.pdb
+*.exe
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Environment variables
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Package files
+*.rar
+*.zip
+*.7z
+
+# Server-specific files (should be configured locally)
+banlist.txt
+admins.txt
+config.txt
